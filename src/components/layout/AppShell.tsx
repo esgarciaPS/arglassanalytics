@@ -59,6 +59,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   const isAdmin = session.role === "Administrator";
+  const allowed: Record<string, string[]> = {
+    Administrator: ["/", "/supply", "/production", "/quality", "/distribution"],
+    "Production Supervisor": ["/", "/supply", "/production"],
+    "Quality Analyst": ["/", "/quality", "/production"],
+    Executive: ["/", "/supply", "/production", "/quality", "/distribution"],
+  };
+  const visibleNav = NAV.filter((item) =>
+    (allowed[session.role] ?? ["/"]).includes(item.to),
+  );
 
   const isActive = (to: string, exact?: boolean) =>
     exact ? pathname === to : pathname.startsWith(to);
@@ -88,7 +97,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
 
         <nav className="flex-1 space-y-1 overflow-y-auto p-3">
-          {NAV.map((item) => (
+          {visibleNav.map((item) => (
             <Link
               key={item.to}
               to={item.to}
