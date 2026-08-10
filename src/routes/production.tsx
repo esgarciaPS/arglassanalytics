@@ -2,7 +2,6 @@ import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   Bar,
-  BarChart,
   CartesianGrid,
   Cell,
   ComposedChart,
@@ -320,6 +319,3 @@ function ProductionPage() {
     </AppShell>
   );
 }
-
-// Keeps recharts BarChart import referenced for tree-shaking clarity in dev builds.
-export const _unusedChart = BarChart;
