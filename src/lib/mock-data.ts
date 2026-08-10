@@ -268,7 +268,7 @@ export const productionBatches: ProductionBatch[] = (() => {
     MONTHS.forEach((month, mi) => {
       for (let b = 0; b < 4; b++) {
         const r = rng(500 + li * 101 + mi * 17 + b * 7);
-        const target = [520000, 460000, 380000][li];
+        const target = [520000, 460000, 380000][li]!;
         const seasonal = 1 + Math.sin((mi + li) / 2.1) * 0.045;
         const eff = 0.86 + r() * 0.11 + (mi * 0.006 - li * 0.012) + (seasonal - 1);
         const efficiency = Math.min(0.985, Math.max(0.74, eff));
@@ -290,7 +290,7 @@ export const productionBatches: ProductionBatch[] = (() => {
 
 export function batchProduct(batchId: string) {
   const n = batchId.split("-").reduce((a, c) => a + c.charCodeAt(0), 0);
-  return productFamilies[n % productFamilies.length];
+  return productFamilies[n % productFamilies.length]!;
 }
 
 export const downtimeCauses = [
@@ -325,6 +325,7 @@ export const qualityInspections: QualityInspection[] = (() => {
     const r = rng(9000 + i * 13);
     for (let k = 0; k < 2; k++) {
       const rr = rng(9000 + i * 13 + k * 3);
+      const pv = processVariables[(i + k) % processVariables.length]!;
       const base = 1.4 + rr() * 2.6 + (batch.efficiency < 88 ? 1.6 : 0);
       const defectRate = Math.round(base * 100) / 100;
       const result =
@@ -333,8 +334,8 @@ export const qualityInspections: QualityInspection[] = (() => {
         id: `QI-${batch.id}-${k + 1}`,
         batchId: batch.id,
         lineId: batch.lineId,
-        inspectionPoint: points[(i + k) % points.length],
-        processVariable: processVariables[(i + k) % processVariables.length].key,
+        inspectionPoint: points[(i + k) % points.length]!,
+        processVariable: pv.key,
         variableValue:
           Math.round(
             ({
@@ -342,9 +343,7 @@ export const qualityInspections: QualityInspection[] = (() => {
               moldCooling: 1450 - defectRate * 40 + r() * 30,
               lehrTemp: 545 + defectRate * 4 + r() * 6,
               blankPressure: 2.9 - defectRate * 0.08 + r() * 0.08,
-            } as Record<string, number>)[
-              processVariables[(i + k) % processVariables.length].key
-            ] * 100,
+            } as Record<string, number>)[pv.key]! * 100,
           ) / 100,
         defectRate,
         result,
@@ -366,7 +365,7 @@ export const salesTargets: SalesTarget[] = (() => {
   channels.forEach((c, ci) => {
     MONTHS.forEach((period, mi) => {
       const r = rng(300 + ci * 53 + mi * 19);
-      const target = [4200000, 2100000, 1650000, 980000][ci];
+      const target = [4200000, 2100000, 1650000, 980000][ci]!;
       const perf = 0.88 + r() * 0.22 + mi * 0.008 - ci * 0.02;
       const actual = Math.round(target * Math.min(1.16, Math.max(0.79, perf)));
       out.push({
@@ -486,7 +485,7 @@ export const alerts: Alert[] = [
 
 export function monthlyTrend() {
   return MONTH_LABELS.map((label, i) => {
-    const month = MONTHS[i];
+    const month = MONTHS[i]!;
     const batches = productionBatches.filter((b) => b.date.startsWith(month));
     const produced = batches.reduce((a, b) => a + b.producedQty, 0);
     const target = batches.reduce((a, b) => a + b.targetQty, 0);
@@ -506,8 +505,8 @@ export function monthlyTrend() {
 
 export function executiveKpis() {
   const trend = monthlyTrend();
-  const last = trend[trend.length - 1];
-  const prev = trend[trend.length - 2];
+  const last = trend[trend.length - 1]!;
+  const prev = trend[trend.length - 2]!;
   const coverage =
     rawMaterials.reduce((a, m) => a + coverageDays(m), 0) / rawMaterials.length;
   return {
