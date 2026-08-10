@@ -15,6 +15,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as ProductionRouteImport } from './routes/production'
 import { Route as QualityRouteImport } from './routes/quality'
 import { Route as SupplyRouteImport } from './routes/supply'
+import { Route as AdminTargetsRouteImport } from './routes/admin.targets'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -46,6 +47,11 @@ const SupplyRoute = SupplyRouteImport.update({
   path: '/supply',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminTargetsRoute = AdminTargetsRouteImport.update({
+  id: '/admin/targets',
+  path: '/admin/targets',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -54,6 +60,7 @@ export interface FileRoutesByFullPath {
   '/production': typeof ProductionRoute
   '/quality': typeof QualityRoute
   '/supply': typeof SupplyRoute
+  '/admin/targets': typeof AdminTargetsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -62,6 +69,7 @@ export interface FileRoutesByTo {
   '/production': typeof ProductionRoute
   '/quality': typeof QualityRoute
   '/supply': typeof SupplyRoute
+  '/admin/targets': typeof AdminTargetsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -71,13 +79,27 @@ export interface FileRoutesById {
   '/production': typeof ProductionRoute
   '/quality': typeof QualityRoute
   '/supply': typeof SupplyRoute
+  '/admin/targets': typeof AdminTargetsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/distribution' | '/login' | '/production' | '/quality' | '/supply'
+    | '/'
+    | '/distribution'
+    | '/login'
+    | '/production'
+    | '/quality'
+    | '/supply'
+    | '/admin/targets'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/distribution' | '/login' | '/production' | '/quality' | '/supply'
+  to:
+    | '/'
+    | '/distribution'
+    | '/login'
+    | '/production'
+    | '/quality'
+    | '/supply'
+    | '/admin/targets'
   id:
     | '__root__'
     | '/'
@@ -86,6 +108,7 @@ export interface FileRouteTypes {
     | '/production'
     | '/quality'
     | '/supply'
+    | '/admin/targets'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -95,6 +118,7 @@ export interface RootRouteChildren {
   ProductionRoute: typeof ProductionRoute
   QualityRoute: typeof QualityRoute
   SupplyRoute: typeof SupplyRoute
+  AdminTargetsRoute: typeof AdminTargetsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -141,6 +165,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SupplyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/targets': {
+      id: '/admin/targets'
+      path: '/admin/targets'
+      fullPath: '/admin/targets'
+      preLoaderRoute: typeof AdminTargetsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -151,6 +182,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProductionRoute: ProductionRoute,
   QualityRoute: QualityRoute,
   SupplyRoute: SupplyRoute,
+  AdminTargetsRoute: AdminTargetsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
