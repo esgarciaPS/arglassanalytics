@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DistributionRouteImport } from './routes/distribution'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ProductionRouteImport } from './routes/production'
 import { Route as QualityRouteImport } from './routes/quality'
@@ -18,6 +19,11 @@ import { Route as SupplyRouteImport } from './routes/supply'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DistributionRoute = DistributionRouteImport.update({
+  id: '/distribution',
+  path: '/distribution',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -43,6 +49,7 @@ const SupplyRoute = SupplyRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/distribution': typeof DistributionRoute
   '/login': typeof LoginRoute
   '/production': typeof ProductionRoute
   '/quality': typeof QualityRoute
@@ -50,6 +57,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/distribution': typeof DistributionRoute
   '/login': typeof LoginRoute
   '/production': typeof ProductionRoute
   '/quality': typeof QualityRoute
@@ -58,6 +66,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/distribution': typeof DistributionRoute
   '/login': typeof LoginRoute
   '/production': typeof ProductionRoute
   '/quality': typeof QualityRoute
@@ -65,14 +74,23 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/production' | '/quality' | '/supply'
+  fullPaths:
+    '/' | '/distribution' | '/login' | '/production' | '/quality' | '/supply'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/production' | '/quality' | '/supply'
-  id: '__root__' | '/' | '/login' | '/production' | '/quality' | '/supply'
+  to: '/' | '/distribution' | '/login' | '/production' | '/quality' | '/supply'
+  id:
+    | '__root__'
+    | '/'
+    | '/distribution'
+    | '/login'
+    | '/production'
+    | '/quality'
+    | '/supply'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DistributionRoute: typeof DistributionRoute
   LoginRoute: typeof LoginRoute
   ProductionRoute: typeof ProductionRoute
   QualityRoute: typeof QualityRoute
@@ -86,6 +104,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/distribution': {
+      id: '/distribution'
+      path: '/distribution'
+      fullPath: '/distribution'
+      preLoaderRoute: typeof DistributionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -121,6 +146,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DistributionRoute: DistributionRoute,
   LoginRoute: LoginRoute,
   ProductionRoute: ProductionRoute,
   QualityRoute: QualityRoute,
