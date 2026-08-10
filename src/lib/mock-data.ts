@@ -326,10 +326,10 @@ export const qualityInspections: QualityInspection[] = (() => {
     for (let k = 0; k < 2; k++) {
       const rr = rng(9000 + i * 13 + k * 3);
       const pv = processVariables[(i + k) % processVariables.length]!;
-      const base = 1.4 + rr() * 2.6 + (batch.efficiency < 88 ? 1.6 : 0);
+      const base = 1.1 + rr() * 2.4 + (batch.efficiency < 88 ? 1.3 : 0);
       const defectRate = Math.round(base * 100) / 100;
       const result =
-        defectRate > 4.2 ? "Rejected" : defectRate > 3.2 ? "Conditional" : "Approved";
+        defectRate > 4.4 ? "Rejected" : defectRate > 3.7 ? "Conditional" : "Approved";
       out.push({
         id: `QI-${batch.id}-${k + 1}`,
         batchId: batch.id,

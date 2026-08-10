@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import {
   Area,
-  AreaChart,
+  ComposedChart,
   CartesianGrid,
   Legend,
   Line,
@@ -121,9 +121,9 @@ function ExecutivePage() {
           title="Consolidated performance trend"
           subtitle="Production compliance, positive release and sales fulfillment — last 6 months"
         >
-          <div className="h-80">
+          <div className="h-[420px]">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={trend} margin={{ top: 8, right: 8, left: -12, bottom: 0 }}>
+              <ComposedChart data={trend} margin={{ top: 8, right: 8, left: -12, bottom: 0 }}>
                 <defs>
                   <linearGradient id="gProd" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stopColor="var(--chart-1)" stopOpacity={0.35} />
@@ -166,7 +166,7 @@ function ExecutivePage() {
                   strokeWidth={2}
                   dot={false}
                 />
-              </AreaChart>
+              </ComposedChart>
             </ResponsiveContainer>
           </div>
         </Panel>
