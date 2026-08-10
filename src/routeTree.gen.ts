@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ProductionRouteImport } from './routes/production'
+import { Route as QualityRouteImport } from './routes/quality'
 import { Route as SupplyRouteImport } from './routes/supply'
 
 const IndexRoute = IndexRouteImport.update({
@@ -29,6 +30,11 @@ const ProductionRoute = ProductionRouteImport.update({
   path: '/production',
   getParentRoute: () => rootRouteImport,
 } as any)
+const QualityRoute = QualityRouteImport.update({
+  id: '/quality',
+  path: '/quality',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SupplyRoute = SupplyRouteImport.update({
   id: '/supply',
   path: '/supply',
@@ -39,12 +45,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/production': typeof ProductionRoute
+  '/quality': typeof QualityRoute
   '/supply': typeof SupplyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/production': typeof ProductionRoute
+  '/quality': typeof QualityRoute
   '/supply': typeof SupplyRoute
 }
 export interface FileRoutesById {
@@ -52,20 +60,22 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/production': typeof ProductionRoute
+  '/quality': typeof QualityRoute
   '/supply': typeof SupplyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/production' | '/supply'
+  fullPaths: '/' | '/login' | '/production' | '/quality' | '/supply'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/production' | '/supply'
-  id: '__root__' | '/' | '/login' | '/production' | '/supply'
+  to: '/' | '/login' | '/production' | '/quality' | '/supply'
+  id: '__root__' | '/' | '/login' | '/production' | '/quality' | '/supply'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LoginRoute: typeof LoginRoute
   ProductionRoute: typeof ProductionRoute
+  QualityRoute: typeof QualityRoute
   SupplyRoute: typeof SupplyRoute
 }
 
@@ -92,6 +102,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/quality': {
+      id: '/quality'
+      path: '/quality'
+      fullPath: '/quality'
+      preLoaderRoute: typeof QualityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/supply': {
       id: '/supply'
       path: '/supply'
@@ -106,6 +123,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LoginRoute: LoginRoute,
   ProductionRoute: ProductionRoute,
+  QualityRoute: QualityRoute,
   SupplyRoute: SupplyRoute,
 }
 export const routeTree = rootRouteImport
