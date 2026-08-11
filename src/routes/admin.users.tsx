@@ -76,6 +76,7 @@ function UsersPage() {
   return (
     <AppShell>
       <PageHeader
+        legendModule="users"
         title="Users & Roles"
         description="Directory of platform accounts and the role that determines which operational modules each user can access."
         fileName="demo-users"

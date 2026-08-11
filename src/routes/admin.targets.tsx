@@ -75,6 +75,7 @@ function TargetsPage() {
   return (
     <AppShell>
       <PageHeader
+        legendModule="targets"
         title="Target Configuration"
         description="Set the operational and commercial thresholds that drive status badges and compliance indicators across the platform."
         fileName="demo-targets"

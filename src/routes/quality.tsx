@@ -106,6 +106,7 @@ function QualityPage() {
   return (
     <AppShell>
       <PageHeader
+        legendModule="quality"
         title="Quality & Positive Release"
         description="Release decisions, defect drivers and inspection traceability across hot end, cold end and laboratory checkpoints."
         fileName="demo-quality"

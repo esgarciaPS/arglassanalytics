@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { exportExcel, exportPdf, type ExportSection } from "@/lib/export";
 import { toast } from "sonner";
+import { LegendPopover } from "@/components/dashboard/LegendPopover";
 
 export function PageHeader({
   title,
@@ -15,6 +16,7 @@ export function PageHeader({
   fileName,
   sections,
   filterSummary,
+  legendModule,
   children,
 }: {
   title: string;
@@ -22,6 +24,7 @@ export function PageHeader({
   fileName: string;
   sections: () => ExportSection[];
   filterSummary?: string;
+  legendModule?: string;
   children?: React.ReactNode;
 }) {
   return (
@@ -32,6 +35,7 @@ export function PageHeader({
       </div>
       <div className="flex items-center gap-2">
         {children}
+        {legendModule && <LegendPopover module={legendModule} />}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="default" className="gap-2">

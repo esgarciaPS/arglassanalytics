@@ -84,6 +84,7 @@ function DistributionPage() {
   return (
     <AppShell>
       <PageHeader
+        legendModule="distribution"
         title="Distribution & Sales"
         description="Commercial coverage by channel and region: finished goods availability against projected demand and target attainment."
         fileName="demo-distribution"

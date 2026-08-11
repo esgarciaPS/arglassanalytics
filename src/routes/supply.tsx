@@ -84,6 +84,7 @@ function SupplyPage() {
   return (
     <AppShell>
       <PageHeader
+        legendModule="supply"
         title="Supply & Raw Materials"
         description="Batch house inventory position against minimum stock and coverage targets, by warehouse and supplier."
         fileName="demo-supply"

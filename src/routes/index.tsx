@@ -49,6 +49,7 @@ function ExecutivePage() {
   return (
     <AppShell>
       <PageHeader
+        legendModule="executive"
         title="Executive Panel"
         description="Consolidated view of supply, production, quality and commercial performance for the last six months."
         fileName="demo-executive-panel"

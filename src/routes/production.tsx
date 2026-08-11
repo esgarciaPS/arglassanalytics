@@ -120,6 +120,7 @@ function ProductionPage() {
   return (
     <AppShell>
       <PageHeader
+        legendModule="production"
         title="Production"
         description="Forming and cold-end performance by furnace line: efficiency against target, downtime drivers and batch output."
         fileName="demo-production"
