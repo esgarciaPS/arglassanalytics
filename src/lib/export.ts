@@ -33,7 +33,7 @@ export function exportPdf(
   doc.rect(0, 0, doc.internal.pageSize.getWidth(), 56, "F");
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(15);
-  doc.text(`Arglass — ${title}`, 40, 26);
+  doc.text(`DEMO — ${title}`, 40, 26);
   doc.setFontSize(9);
   doc.text(subtitle, 40, 43);
 

@@ -43,13 +43,13 @@ import {
 export const Route = createFileRoute("/quality")({
   head: () => ({
     meta: [
-      { title: "Quality & Positive Release — Arglass" },
+      { title: "Quality & Positive Release — DEMO" },
       {
         name: "description",
         content:
           "Approval and rejection rates over time, process variable correlation with defect rate, and inspection traceability by batch.",
       },
-      { property: "og:title", content: "Quality & Positive Release — Arglass" },
+      { property: "og:title", content: "Quality & Positive Release — DEMO" },
       {
         property: "og:description",
         content: "Positive release rates, defect correlation analysis and inspection records.",
@@ -106,9 +106,10 @@ function QualityPage() {
   return (
     <AppShell>
       <PageHeader
+        legendModule="quality"
         title="Quality & Positive Release"
         description="Release decisions, defect drivers and inspection traceability across hot end, cold end and laboratory checkpoints."
-        fileName="arglass-quality"
+        fileName="demo-quality"
         filterSummary={[
           `Correlation variable: ${varLabel}`,
           search ? `Search: "${search}"` : null,

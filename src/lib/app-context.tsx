@@ -25,7 +25,7 @@ interface AppContextValue {
 }
 
 const AppContext = createContext<AppContextValue | null>(null);
-const STORAGE_KEY = "arglass.session";
+const STORAGE_KEY = "demo.session";
 
 function nameFromEmail(email: string) {
   const handle = email.split("@")[0] ?? "operator";

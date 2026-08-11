@@ -4,6 +4,8 @@ import {
   Boxes,
   ChevronDown,
   Factory,
+  Globe,
+  BookOpen,
   LayoutDashboard,
   LogOut,
   Menu,
@@ -15,6 +17,7 @@ import {
   Users,
 } from "lucide-react";
 import { useApp } from "@/lib/app-context";
+import { LANGUAGES, useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
@@ -28,20 +31,22 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 const NAV = [
-  { to: "/", label: "Executive Panel", icon: LayoutDashboard, exact: true },
-  { to: "/supply", label: "Supply & Raw Materials", icon: Boxes },
-  { to: "/production", label: "Production", icon: Factory },
-  { to: "/quality", label: "Quality & Positive Release", icon: ShieldCheck },
-  { to: "/distribution", label: "Distribution & Sales", icon: Truck },
+  { to: "/", key: "executive", icon: LayoutDashboard, exact: true },
+  { to: "/supply", key: "supply", icon: Boxes },
+  { to: "/production", key: "production", icon: Factory },
+  { to: "/quality", key: "quality", icon: ShieldCheck },
+  { to: "/distribution", key: "distribution", icon: Truck },
+  { to: "/manual", key: "manual", icon: BookOpen },
 ] as const;
 
 const ADMIN_NAV = [
-  { to: "/admin/targets", label: "Target Configuration", icon: SlidersHorizontal },
-  { to: "/admin/users", label: "Users & Roles", icon: Users },
+  { to: "/admin/targets", key: "targets", icon: SlidersHorizontal },
+  { to: "/admin/users", key: "users", icon: Users },
 ] as const;
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const { session, ready, signOut, search, setSearch } = useApp();
+  const { t, lang, setLang } = useI18n();
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [collapsed, setCollapsed] = useState(false);
@@ -60,10 +65,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   const isAdmin = session.role === "Administrator";
   const allowed: Record<string, string[]> = {
-    Administrator: ["/", "/supply", "/production", "/quality", "/distribution"],
-    "Production Supervisor": ["/", "/supply", "/production"],
-    "Quality Analyst": ["/", "/quality", "/production"],
-    Executive: ["/", "/supply", "/production", "/quality", "/distribution"],
+    Administrator: ["/", "/supply", "/production", "/quality", "/distribution", "/manual"],
+    "Production Supervisor": ["/", "/supply", "/production", "/manual"],
+    "Quality Analyst": ["/", "/quality", "/production", "/manual"],
+    Executive: ["/", "/supply", "/production", "/quality", "/distribution", "/manual"],
   };
   const visibleNav = NAV.filter((item) =>
     (allowed[session.role] ?? ["/"]).includes(item.to),
@@ -87,7 +92,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           {!collapsed && (
             <div className="min-w-0">
               <p className="truncate font-display text-sm font-semibold tracking-tight">
-                ARGLASS
+                DEMO
               </p>
               <p className="truncate text-[11px] text-sidebar-foreground/60">
                 Operations Analytics
@@ -107,10 +112,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   ? "bg-sidebar-accent text-sidebar-accent-foreground"
                   : "text-sidebar-foreground/75 hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground",
               )}
-              title={item.label}
+              title={t(`nav.${item.key}`)}
             >
               <item.icon className="size-4 shrink-0" />
-              {!collapsed && <span className="truncate">{item.label}</span>}
+              {!collapsed && <span className="truncate">{t(`nav.${item.key}`)}</span>}
             </Link>
           ))}
 
@@ -121,7 +126,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   onClick={() => setAdminOpen((v) => !v)}
                   className="flex w-full items-center justify-between rounded-md px-3 py-2 text-[11px] font-semibold uppercase tracking-widest text-sidebar-foreground/50 hover:text-sidebar-foreground"
                 >
-                  Administration
+                  {t("nav.administration")}
                   <ChevronDown
                     className={cn(
                       "size-3.5 transition-transform",
@@ -141,10 +146,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                         ? "bg-sidebar-accent text-sidebar-accent-foreground"
                         : "text-sidebar-foreground/75 hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground",
                     )}
-                    title={item.label}
+                    title={t(`nav.${item.key}`)}
                   >
                     <item.icon className="size-4 shrink-0" />
-                    {!collapsed && <span className="truncate">{item.label}</span>}
+                    {!collapsed && <span className="truncate">{t(`nav.${item.key}`)}</span>}
                   </Link>
                 ))}
             </div>
@@ -157,7 +162,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm text-sidebar-foreground/70 hover:bg-sidebar-accent/60"
           >
             <Menu className="size-4" />
-            {!collapsed && <span>Collapse menu</span>}
+            {!collapsed && <span>{t("ui.collapse")}</span>}
           </button>
         </div>
       </aside>
@@ -165,18 +170,45 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-border bg-card px-6">
           <div className="hidden text-sm font-semibold text-foreground md:block">
-            Arglass Operations Intelligence
+            {t("ui.platform")}
           </div>
           <div className="relative mx-auto w-full max-w-xl">
             <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search line, product, batch, raw material or period…"
+              placeholder={t("ui.search")}
               className="h-10 pl-9"
               aria-label="Global search"
             />
           </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-10 gap-2 px-2" aria-label={t("ui.language")}>
+                <Globe className="size-4" />
+                <span className="text-xs font-semibold">
+                  {lang.toUpperCase()}
+                </span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-44">
+              <DropdownMenuLabel className="text-xs text-muted-foreground">
+                {t("ui.language")}
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {LANGUAGES.map((l) => (
+                <DropdownMenuItem
+                  key={l.code}
+                  onClick={() => setLang(l.code)}
+                  className={l.code === lang ? "font-semibold text-foreground" : ""}
+                >
+                  <span className="mr-2 text-[11px] text-muted-foreground">{l.flag}</span>
+                  {l.label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-10 gap-3 px-2">
@@ -202,7 +234,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   void navigate({ to: "/login", replace: true });
                 }}
               >
-                <LogOut className="mr-2 size-4" /> Sign out
+                <LogOut className="mr-2 size-4" /> {t("ui.signOut")}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

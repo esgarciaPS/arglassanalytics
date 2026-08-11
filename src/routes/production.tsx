@@ -44,13 +44,13 @@ import {
 export const Route = createFileRoute("/production")({
   head: () => ({
     meta: [
-      { title: "Production — Arglass Operations Analytics" },
+      { title: "Production — DEMO Operations Analytics" },
       {
         name: "description",
         content:
           "Line efficiency against target, downtime pareto by root cause and produced batch performance across furnace lines.",
       },
-      { property: "og:title", content: "Production — Arglass Operations Analytics" },
+      { property: "og:title", content: "Production — DEMO Operations Analytics" },
       {
         property: "og:description",
         content: "Furnace line efficiency, downtime causes and batch output vs. target.",
@@ -120,9 +120,10 @@ function ProductionPage() {
   return (
     <AppShell>
       <PageHeader
+        legendModule="production"
         title="Production"
         description="Forming and cold-end performance by furnace line: efficiency against target, downtime drivers and batch output."
-        fileName="arglass-production"
+        fileName="demo-production"
         filterSummary={[
           lineId === "all"
             ? "All lines"

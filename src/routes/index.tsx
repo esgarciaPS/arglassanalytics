@@ -21,13 +21,13 @@ import { alerts, executiveKpis, monthlyTrend } from "@/lib/mock-data";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Executive Panel — Arglass Operations Analytics" },
+      { title: "Executive Panel — DEMO Operations Analytics" },
       {
         name: "description",
         content:
           "Consolidated glass container manufacturing KPIs: production compliance, stock coverage, positive release and sales fulfillment.",
       },
-      { property: "og:title", content: "Executive Panel — Arglass Operations Analytics" },
+      { property: "og:title", content: "Executive Panel — DEMO Operations Analytics" },
       {
         property: "og:description",
         content:
@@ -49,9 +49,10 @@ function ExecutivePage() {
   return (
     <AppShell>
       <PageHeader
+        legendModule="executive"
         title="Executive Panel"
         description="Consolidated view of supply, production, quality and commercial performance for the last six months."
-        fileName="arglass-executive-panel"
+        fileName="demo-executive-panel"
         filterSummary={search ? `Search filter: "${search}"` : "No filters applied"}
         sections={() => [
           {

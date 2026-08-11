@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AppProvider } from "@/lib/app-context";
+import { I18nProvider } from "@/lib/i18n";
 import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
@@ -79,14 +80,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Arglass — Operations Analytics Platform" },
+      { title: "DEMO — Operations Analytics Platform" },
       {
         name: "description",
         content:
           "Operations analytics for glass container manufacturing: supply, production, quality and distribution dashboards.",
       },
-      { name: "author", content: "Arglass" },
-      { property: "og:title", content: "Arglass — Operations Analytics Platform" },
+      { name: "author", content: "DEMO" },
+      { property: "og:title", content: "DEMO — Operations Analytics Platform" },
       {
         property: "og:description",
         content: "Corporate dashboards for glass container manufacturing operations.",
@@ -134,11 +135,13 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AppProvider>
+      <I18nProvider>
+        <AppProvider>
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
         <Outlet />
         <Toaster />
       </AppProvider>
+      </I18nProvider>
     </QueryClientProvider>
   );
 }

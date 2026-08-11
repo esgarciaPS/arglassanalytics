@@ -39,13 +39,13 @@ import {
 export const Route = createFileRoute("/supply")({
   head: () => ({
     meta: [
-      { title: "Supply & Raw Materials — Arglass" },
+      { title: "Supply & Raw Materials — DEMO" },
       {
         name: "description",
         content:
           "Raw material stock levels, coverage targets, suppliers and warehouse status for glass container batch preparation.",
       },
-      { property: "og:title", content: "Supply & Raw Materials — Arglass" },
+      { property: "og:title", content: "Supply & Raw Materials — DEMO" },
       {
         property: "og:description",
         content: "Stock coverage, minimum thresholds and supplier performance by material.",
@@ -84,9 +84,10 @@ function SupplyPage() {
   return (
     <AppShell>
       <PageHeader
+        legendModule="supply"
         title="Supply & Raw Materials"
         description="Batch house inventory position against minimum stock and coverage targets, by warehouse and supplier."
-        fileName="arglass-supply"
+        fileName="demo-supply"
         filterSummary={[
           warehouse !== ALL ? `Warehouse: ${warehouse}` : null,
           category !== ALL ? `Category: ${category}` : null,

@@ -17,13 +17,13 @@ import type { Role } from "@/lib/mock-data";
 export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
-      { title: "Sign in — Arglass Operations Analytics" },
+      { title: "Sign in — DEMO Operations Analytics" },
       {
         name: "description",
         content:
-          "Secure access to the Arglass glass container manufacturing analytics platform.",
+          "Secure access to the DEMO glass container manufacturing analytics platform.",
       },
-      { property: "og:title", content: "Sign in — Arglass Operations Analytics" },
+      { property: "og:title", content: "Sign in — DEMO Operations Analytics" },
       {
         property: "og:description",
         content: "Corporate access to supply, production, quality and sales dashboards.",
@@ -43,7 +43,7 @@ const ROLES: Role[] = [
 function LoginPage() {
   const { signIn } = useApp();
   const navigate = useNavigate();
-  const [email, setEmail] = useState("m.whitfield@arglass.com");
+  const [email, setEmail] = useState("m.whitfield@demo.com");
   const [password, setPassword] = useState("demo1234");
   const [role, setRole] = useState<Role>("Administrator");
 
@@ -58,7 +58,7 @@ function LoginPage() {
             <PanelsTopLeft className="size-5" />
           </div>
           <div>
-            <p className="font-display text-sm font-semibold tracking-widest">ARGLASS</p>
+            <p className="font-display text-sm font-semibold tracking-widest">DEMO</p>
             <p className="text-[11px] opacity-70">Operations Analytics Platform</p>
           </div>
         </div>
