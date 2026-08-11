@@ -34,13 +34,13 @@ import { MONTHS, MONTH_LABELS, salesTargets, type Status } from "@/lib/mock-data
 export const Route = createFileRoute("/distribution")({
   head: () => ({
     meta: [
-      { title: "Distribution & Sales — Arglass" },
+      { title: "Distribution & Sales — DEMO" },
       {
         name: "description",
         content:
           "Available stock against projected demand, sales target attainment and channel performance for glass container distribution.",
       },
-      { property: "og:title", content: "Distribution & Sales — Arglass" },
+      { property: "og:title", content: "Distribution & Sales — DEMO" },
       {
         property: "og:description",
         content: "Demand coverage, sales target attainment and channel performance.",
@@ -86,7 +86,7 @@ function DistributionPage() {
       <PageHeader
         title="Distribution & Sales"
         description="Commercial coverage by channel and region: finished goods availability against projected demand and target attainment."
-        fileName="arglass-distribution"
+        fileName="demo-distribution"
         filterSummary={[
           `Period: ${period}`,
           search ? `Search: "${search}"` : null,

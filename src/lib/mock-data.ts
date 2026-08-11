@@ -1,4 +1,4 @@
-// Deterministic mock dataset for the Arglass operations analytics platform.
+// Deterministic mock dataset for the DEMO operations analytics platform.
 // All values are synthetic but shaped to look realistic to a technical audience.
 
 export type Status = "ok" | "warning" | "critical";
@@ -387,42 +387,42 @@ export const users: AppUser[] = [
   {
     id: "U-01",
     name: "Marcus Whitfield",
-    email: "m.whitfield@arglass.com",
+    email: "m.whitfield@demo.com",
     role: "Administrator",
     status: "Active",
   },
   {
     id: "U-02",
     name: "Elena Duarte",
-    email: "e.duarte@arglass.com",
+    email: "e.duarte@demo.com",
     role: "Production Supervisor",
     status: "Active",
   },
   {
     id: "U-03",
     name: "Priya Raman",
-    email: "p.raman@arglass.com",
+    email: "p.raman@demo.com",
     role: "Quality Analyst",
     status: "Active",
   },
   {
     id: "U-04",
     name: "Thomas Berger",
-    email: "t.berger@arglass.com",
+    email: "t.berger@demo.com",
     role: "Executive",
     status: "Active",
   },
   {
     id: "U-05",
     name: "Sofia Lindqvist",
-    email: "s.lindqvist@arglass.com",
+    email: "s.lindqvist@demo.com",
     role: "Production Supervisor",
     status: "Suspended",
   },
   {
     id: "U-06",
     name: "Andre Cole",
-    email: "a.cole@arglass.com",
+    email: "a.cole@demo.com",
     role: "Quality Analyst",
     status: "Active",
   },

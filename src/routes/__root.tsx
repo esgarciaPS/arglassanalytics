@@ -79,14 +79,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Arglass — Operations Analytics Platform" },
+      { title: "DEMO — Operations Analytics Platform" },
       {
         name: "description",
         content:
           "Operations analytics for glass container manufacturing: supply, production, quality and distribution dashboards.",
       },
-      { name: "author", content: "Arglass" },
-      { property: "og:title", content: "Arglass — Operations Analytics Platform" },
+      { name: "author", content: "DEMO" },
+      { property: "og:title", content: "DEMO — Operations Analytics Platform" },
       {
         property: "og:description",
         content: "Corporate dashboards for glass container manufacturing operations.",

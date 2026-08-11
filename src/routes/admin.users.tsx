@@ -26,13 +26,13 @@ import { RestrictedNotice } from "./admin.targets";
 export const Route = createFileRoute("/admin/users")({
   head: () => ({
     meta: [
-      { title: "Users & Roles — Arglass Administration" },
+      { title: "Users & Roles — DEMO Administration" },
       {
         name: "description",
         content:
           "Manage platform users and assign roles: Administrator, Production Supervisor, Quality Analyst and Executive.",
       },
-      { property: "og:title", content: "Users & Roles — Arglass Administration" },
+      { property: "og:title", content: "Users & Roles — DEMO Administration" },
       {
         property: "og:description",
         content: "User directory and role assignment for the operations analytics platform.",
@@ -78,7 +78,7 @@ function UsersPage() {
       <PageHeader
         title="Users & Roles"
         description="Directory of platform accounts and the role that determines which operational modules each user can access."
-        fileName="arglass-users"
+        fileName="demo-users"
         filterSummary={search ? `Search: "${search}"` : "No filters applied"}
         sections={() => [
           {

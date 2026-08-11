@@ -20,13 +20,13 @@ import { rawMaterials, productionLines, salesTargets, MONTHS } from "@/lib/mock-
 export const Route = createFileRoute("/admin/targets")({
   head: () => ({
     meta: [
-      { title: "Target Configuration — Arglass Administration" },
+      { title: "Target Configuration — DEMO Administration" },
       {
         name: "description",
         content:
           "Define coverage targets by raw material, efficiency targets by production line and sales targets by distribution channel.",
       },
-      { property: "og:title", content: "Target Configuration — Arglass Administration" },
+      { property: "og:title", content: "Target Configuration — DEMO Administration" },
       {
         property: "og:description",
         content: "Administrative configuration of operational and commercial targets.",
@@ -77,7 +77,7 @@ function TargetsPage() {
       <PageHeader
         title="Target Configuration"
         description="Set the operational and commercial thresholds that drive status badges and compliance indicators across the platform."
-        fileName="arglass-targets"
+        fileName="demo-targets"
         filterSummary={search ? `Search: "${search}"` : "No filters applied"}
         sections={() => [
           {

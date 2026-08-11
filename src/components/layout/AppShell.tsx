@@ -87,7 +87,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           {!collapsed && (
             <div className="min-w-0">
               <p className="truncate font-display text-sm font-semibold tracking-tight">
-                ARGLASS
+                DEMO
               </p>
               <p className="truncate text-[11px] text-sidebar-foreground/60">
                 Operations Analytics
@@ -165,7 +165,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-border bg-card px-6">
           <div className="hidden text-sm font-semibold text-foreground md:block">
-            Arglass Operations Intelligence
+            DEMO Operations Intelligence
           </div>
           <div className="relative mx-auto w-full max-w-xl">
             <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
