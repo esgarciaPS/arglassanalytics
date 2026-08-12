@@ -253,8 +253,8 @@ function ProductionPage() {
                   }}
                 />
                 <Bar yAxisId="left" dataKey="minutes" name={p("prod.colDowntimeMin")} radius={[3, 3, 0, 0]}>
-                  {pareto.map((p, i) => (
-                    <Cell key={p.cause} fill={i < 2 ? "var(--status-critical)" : "var(--chart-1)"} />
+                  {pareto.map((row, i) => (
+                    <Cell key={row.cause} fill={i < 2 ? "var(--status-critical)" : "var(--chart-1)"} />
                   ))}
                 </Bar>
                 <Line
