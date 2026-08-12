@@ -29,6 +29,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { matchesSearch, useApp } from "@/lib/app-context";
+import { useI18n } from "@/lib/i18n";
 import { MONTHS, MONTH_LABELS, salesTargets, type Status } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/distribution")({
@@ -60,6 +61,7 @@ function channelStatus(ratio: number): Status {
 
 function DistributionPage() {
   const { search } = useApp();
+  const { p, td } = useI18n();
   const [period, setPeriod] = useState(MONTHS[MONTHS.length - 1]!);
 
   const rows = useMemo(
@@ -76,7 +78,7 @@ function DistributionPage() {
   const attainment = totalTarget ? (totalActual / totalTarget) * 100 : 0;
 
   const stockVsDemand = rows.map((s) => ({
-    channel: s.channel,
+    channel: td(s.channel),
     stock: s.availableStock,
     demand: s.projectedDemand,
   }));
@@ -85,32 +87,32 @@ function DistributionPage() {
     <AppShell>
       <PageHeader
         legendModule="distribution"
-        title="Distribution & Sales"
-        description="Commercial coverage by channel and region: finished goods availability against projected demand and target attainment."
+        title={p("dist.title")}
+        description={p("dist.desc")}
         fileName="demo-distribution"
         filterSummary={[
-          `Period: ${period}`,
-          search ? `Search: "${search}"` : null,
+          `${p("common.period")}: ${period}`,
+          search ? `${p("common.search")}: "${search}"` : null,
         ]
           .filter(Boolean)
           .join(" · ")}
         sections={() => [
           {
-            title: "Channel performance",
+            title: p("dist.secChannel"),
             columns: [
-              "Period",
-              "Channel",
-              "Region",
-              "Target (units)",
-              "Actual (units)",
-              "Attainment (%)",
-              "Available stock",
-              "Projected demand",
+              p("common.period"),
+              p("common.channel"),
+              p("common.region"),
+              p("dist.colTargetUnits"),
+              p("dist.colActualUnits"),
+              p("dist.colAttainmentPct"),
+              p("dist.colAvailable"),
+              p("dist.colDemand"),
             ],
             rows: rows.map((s) => [
               s.period,
-              s.channel,
-              s.region,
+              td(s.channel),
+              td(s.region),
               s.target,
               s.actual,
               Math.round((s.actual / s.target) * 1000) / 10,
@@ -121,13 +123,13 @@ function DistributionPage() {
         ]}
       >
         <Select value={period} onValueChange={setPeriod}>
-          <SelectTrigger className="h-9 w-[160px]" aria-label="Period">
+          <SelectTrigger className="h-9 w-[160px]" aria-label={p("common.period")}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
             {MONTHS.map((m, i) => (
               <SelectItem key={m} value={m}>
-                {MONTH_LABELS[i]} {m.slice(0, 4)}
+                {td(MONTH_LABELS[i]!)} {m.slice(0, 4)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -135,7 +137,7 @@ function DistributionPage() {
       </PageHeader>
 
       <div className="grid gap-6 xl:grid-cols-[1.5fr_1fr]">
-        <Panel title="Available stock vs. projected demand" subtitle={`Period ${period}, by channel`}>
+        <Panel title={p("dist.stockTitle")} subtitle={p("dist.stockSub", { p: period })}>
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={stockVsDemand} margin={{ top: 8, right: 8, left: 4, bottom: 20 }}>
@@ -152,14 +154,14 @@ function DistributionPage() {
                   }}
                 />
                 <Legend wrapperStyle={{ fontSize: 12 }} />
-                <Bar dataKey="stock" name="Available stock" fill="var(--chart-1)" radius={[3, 3, 0, 0]} />
-                <Bar dataKey="demand" name="Projected demand" fill="var(--chart-2)" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="stock" name={p("dist.seriesStock")} fill="var(--chart-1)" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="demand" name={p("dist.seriesDemand")} fill="var(--chart-2)" radius={[3, 3, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </Panel>
 
-        <Panel title="Sales target attainment" subtitle={`Consolidated for ${period}`}>
+        <Panel title={p("dist.attainTitle")} subtitle={p("dist.attainSub", { p: period })}>
           <div className="flex h-72 flex-col justify-center gap-6">
             <div>
               <p className="tabular font-display text-5xl font-semibold text-foreground">
@@ -167,7 +169,7 @@ function DistributionPage() {
                 <span className="text-2xl text-muted-foreground">%</span>
               </p>
               <p className="mt-1 text-sm text-muted-foreground">
-                {fmt(totalActual)} units invoiced against a {fmt(totalTarget)} target
+                {p("dist.invoiced", { a: fmt(totalActual), t: fmt(totalTarget) })}
               </p>
             </div>
             <div className="h-3 w-full overflow-hidden rounded-full bg-muted">
@@ -185,13 +187,13 @@ function DistributionPage() {
             <div className="grid grid-cols-2 gap-4 border-t border-border pt-4 text-sm">
               <div>
                 <p className="text-[11px] uppercase tracking-widest text-muted-foreground">
-                  Channels tracked
+                  {p("dist.channelsTracked")}
                 </p>
                 <p className="tabular mt-1 font-display text-xl font-semibold">{rows.length}</p>
               </div>
               <div>
                 <p className="text-[11px] uppercase tracking-widest text-muted-foreground">
-                  Demand covered
+                  {p("dist.demandCovered")}
                 </p>
                 <p className="tabular mt-1 font-display text-xl font-semibold">
                   {rows.length
@@ -209,19 +211,19 @@ function DistributionPage() {
         </Panel>
       </div>
 
-      <Panel className="mt-6" title="Performance by channel and region" subtitle={`${rows.length} channel(s)`}>
+      <Panel className="mt-6" title={p("dist.tableTitle")} subtitle={p("dist.tableSub", { n: rows.length })}>
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Channel</TableHead>
-                <TableHead>Region</TableHead>
-                <TableHead className="text-right">Target</TableHead>
-                <TableHead className="text-right">Actual</TableHead>
-                <TableHead className="text-right">Attainment</TableHead>
-                <TableHead className="text-right">Available stock</TableHead>
-                <TableHead className="text-right">Projected demand</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead>{p("common.channel")}</TableHead>
+                <TableHead>{p("common.region")}</TableHead>
+                <TableHead className="text-right">{p("common.target")}</TableHead>
+                <TableHead className="text-right">{p("common.actual")}</TableHead>
+                <TableHead className="text-right">{p("dist.colAttainment")}</TableHead>
+                <TableHead className="text-right">{p("dist.colAvailable")}</TableHead>
+                <TableHead className="text-right">{p("dist.colDemand")}</TableHead>
+                <TableHead>{p("common.status")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -229,8 +231,8 @@ function DistributionPage() {
                 const ratio = s.actual / s.target;
                 return (
                   <TableRow key={s.id}>
-                    <TableCell className="font-medium">{s.channel}</TableCell>
-                    <TableCell className="text-muted-foreground">{s.region}</TableCell>
+                    <TableCell className="font-medium">{td(s.channel)}</TableCell>
+                    <TableCell className="text-muted-foreground">{td(s.region)}</TableCell>
                     <TableCell className="tabular text-right text-muted-foreground">{fmt(s.target)}</TableCell>
                     <TableCell className="tabular text-right">{fmt(s.actual)}</TableCell>
                     <TableCell className="tabular text-right">{(ratio * 100).toFixed(1)}%</TableCell>
@@ -245,7 +247,7 @@ function DistributionPage() {
               {rows.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={8} className="py-10 text-center text-muted-foreground">
-                    No channels match the current filters.
+                    {p("dist.empty")}
                   </TableCell>
                 </TableRow>
               )}
