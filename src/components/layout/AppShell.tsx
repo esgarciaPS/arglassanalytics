@@ -46,7 +46,7 @@ const ADMIN_NAV = [
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const { session, ready, signOut, search, setSearch } = useApp();
-  const { t, lang, setLang } = useI18n();
+  const { t, td, lang, setLang } = useI18n();
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [collapsed, setCollapsed] = useState(false);
@@ -218,7 +218,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 <span className="hidden text-left leading-tight sm:block">
                   <span className="block text-sm font-medium">{session.name}</span>
                   <span className="block text-[11px] text-muted-foreground">
-                    {session.role}
+                    {td(session.role)}
                   </span>
                 </span>
               </Button>
