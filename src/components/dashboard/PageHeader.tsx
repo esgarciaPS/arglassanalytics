@@ -9,6 +9,7 @@ import {
 import { exportExcel, exportPdf, type ExportSection } from "@/lib/export";
 import { toast } from "sonner";
 import { LegendPopover } from "@/components/dashboard/LegendPopover";
+import { useI18n } from "@/lib/i18n";
 
 export function PageHeader({
   title,
@@ -27,6 +28,7 @@ export function PageHeader({
   legendModule?: string;
   children?: React.ReactNode;
 }) {
+  const { p } = useI18n();
   return (
     <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
       <div>
@@ -39,30 +41,30 @@ export function PageHeader({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="default" className="gap-2">
-              <Download className="size-4" /> Export
+              <Download className="size-4" /> {p("common.export")}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem
               onClick={() => {
                 exportExcel(fileName, sections());
-                toast.success("Excel report generated from the current view");
+                toast.success(p("common.toastExcel"));
               }}
             >
-              <FileSpreadsheet className="mr-2 size-4" /> Export to Excel
+              <FileSpreadsheet className="mr-2 size-4" /> {p("common.excel")}
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => {
                 exportPdf(
                   fileName,
                   title,
-                  filterSummary ?? "All records — no filters applied",
+                  filterSummary ?? p("common.noFilters"),
                   sections(),
                 );
-                toast.success("PDF report generated from the current view");
+                toast.success(p("common.toastPdf"));
               }}
             >
-              <FileText className="mr-2 size-4" /> Export to PDF
+              <FileText className="mr-2 size-4" /> {p("common.pdf")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
