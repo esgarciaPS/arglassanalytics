@@ -751,6 +751,10 @@ interface I18nValue {
   setLang: (l: Lang) => void;
   d: Dict;
   t: (path: string) => string;
+  /** Page copy lookup with optional {var} interpolation. */
+  p: (key: string, vars?: Record<string, string | number>) => string;
+  /** Dataset value translation (falls back to the English value). */
+  td: (value: string) => string;
 }
 
 const I18nContext = createContext<I18nValue | null>(null);
@@ -784,8 +788,18 @@ export function I18nProvider({ children }: { children: ReactNode }) {
       const section = (d as unknown as Record<string, Record<string, string>>)[group ?? ""];
       return section?.[key ?? ""] ?? path;
     };
-    return { lang, setLang, d, t };
+    const p = (key: string, vars?: Record<string, string | number>) => {
+      const raw = PAGE[lang]?.[key] ?? PAGE.en[key] ?? key;
+      if (!vars) return raw;
+      return Object.entries(vars).reduce(
+        (acc, [k, v]) => acc.replaceAll(`{${k}}`, String(v)),
+        raw,
+      );
+    };
+    const td = (value: string) => DATA[lang]?.[value] ?? value;
+    return { lang, setLang, d, t, p, td };
   }, [lang, setLang]);
+
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
 }
