@@ -7,6 +7,8 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { DATA, PAGE } from "@/lib/i18n-content";
+
 
 export type Lang = "en" | "es" | "pt" | "fr";
 
