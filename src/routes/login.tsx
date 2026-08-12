@@ -132,7 +132,7 @@ function LoginPage() {
                 <SelectContent>
                   {ROLES.map((r) => (
                     <SelectItem key={r} value={r}>
-                      {r}
+                      {td(r)}
                     </SelectItem>
                   ))}
                 </SelectContent>
