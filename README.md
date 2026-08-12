@@ -93,23 +93,4 @@ Generar 2 a 3 líneas de producción y un histórico de 6 meses, con variación 
 - Prioridad: claridad ejecutiva sobre densidad de datos.
 - La exportación puede implementarse con librerías del lado del cliente sobre los datos mock visibles.
 
-This project was built with [Lovable](https://lovable.dev).
 
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/401eab14-9a08-4337-b767-c8d9e50fdafb).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
-
-## Development
-
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
-
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
-```
