@@ -31,6 +31,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { matchesSearch, useApp } from "@/lib/app-context";
+import { useI18n } from "@/lib/i18n";
 import {
   MONTHS,
   MONTH_LABELS,
@@ -71,6 +72,7 @@ function batchStatus(b: { producedQty: number; targetQty: number }): Status {
 
 function ProductionPage() {
   const { search } = useApp();
+  const { p, td } = useI18n();
   const [lineId, setLineId] = useState("all");
 
   const batches = useMemo(
@@ -110,32 +112,32 @@ function ProductionPage() {
       .map((c) => {
         cum += c.minutes;
         return {
-          cause: c.cause,
+          cause: td(c.cause),
           minutes: c.minutes,
           cumulative: Math.round((cum / total) * 1000) / 10,
         };
       });
-  }, [lineId]);
+  }, [lineId, td]);
 
   return (
     <AppShell>
       <PageHeader
         legendModule="production"
-        title="Production"
-        description="Forming and cold-end performance by furnace line: efficiency against target, downtime drivers and batch output."
+        title={p("prod.title")}
+        description={p("prod.desc")}
         fileName="demo-production"
         filterSummary={[
           lineId === "all"
-            ? "All lines"
-            : `Line: ${productionLines.find((l) => l.id === lineId)?.name}`,
-          search ? `Search: "${search}"` : null,
+            ? p("prod.allLinesShort")
+            : `${p("common.line")}: ${td(productionLines.find((l) => l.id === lineId)?.name ?? "")}`,
+          search ? `${p("common.search")}: "${search}"` : null,
         ]
           .filter(Boolean)
           .join(" · ")}
         sections={() => [
           {
-            title: "Efficiency vs target",
-            columns: ["Month", ...productionLines.map((l) => l.name), "Target (%)"],
+            title: p("prod.secEff"),
+            columns: [p("common.month"), ...productionLines.map((l) => td(l.name)), p("prod.targetPct")],
             rows: efficiencyByMonth.map((r) => [
               r["month"] as string,
               ...productionLines.map((l) => r[l.id] as number),
@@ -143,46 +145,46 @@ function ProductionPage() {
             ]),
           },
           {
-            title: "Downtime pareto",
-            columns: ["Cause", "Downtime (min)", "Cumulative (%)"],
-            rows: pareto.map((p) => [p.cause, p.minutes, p.cumulative]),
+            title: p("prod.secPareto"),
+            columns: [p("prod.colCause"), p("prod.colDowntimeMin"), p("prod.colCumulative")],
+            rows: pareto.map((row) => [td(row.cause), row.minutes, row.cumulative]),
           },
           {
-            title: "Batches",
+            title: p("prod.secBatches"),
             columns: [
-              "Batch",
-              "Line",
-              "Product",
-              "Date",
-              "Produced (un)",
-              "Target (un)",
-              "Efficiency (%)",
-              "Downtime (min)",
-              "Status",
+              p("common.batch"),
+              p("common.line"),
+              p("common.product"),
+              p("common.date"),
+              p("prod.colProducedUn"),
+              p("prod.colTargetUn"),
+              p("prod.colEfficiencyPct"),
+              p("prod.colDowntimeMin"),
+              p("common.status"),
             ],
             rows: batches.map((b) => [
               b.id,
-              productionLines.find((l) => l.id === b.lineId)?.name ?? b.lineId,
-              batchProduct(b.id),
+              td(productionLines.find((l) => l.id === b.lineId)?.name ?? b.lineId),
+              td(batchProduct(b.id)),
               b.date,
               b.producedQty,
               b.targetQty,
               b.efficiency,
               b.downtimeMin,
-              batchStatus(b),
+              p(`status.${batchStatus(b)}`),
             ]),
           },
         ]}
       >
         <Select value={lineId} onValueChange={setLineId}>
-          <SelectTrigger className="h-9 w-[260px]" aria-label="Production line">
+          <SelectTrigger className="h-9 w-[260px]" aria-label={p("prod.productionLine")}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All lines — all plants</SelectItem>
+            <SelectItem value="all">{p("prod.allLines")}</SelectItem>
             {productionLines.map((l) => (
               <SelectItem key={l.id} value={l.id}>
-                {l.name} · {l.plant}
+                {td(l.name)} · {td(l.plant)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -190,7 +192,7 @@ function ProductionPage() {
       </PageHeader>
 
       <div className="grid gap-6 xl:grid-cols-2">
-        <Panel title="Line efficiency vs. target" subtitle="Monthly average, last 6 months">
+        <Panel title={p("prod.effTitle")} subtitle={p("prod.effSub")}>
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={efficiencyByMonth} margin={{ top: 8, right: 8, left: -12, bottom: 0 }}>
@@ -209,12 +211,12 @@ function ProductionPage() {
                 {productionLines
                   .filter((l) => lineId === "all" || l.id === lineId)
                   .map((l, i) => (
-                    <Bar key={l.id} dataKey={l.id} name={l.name} fill={`var(--chart-${i + 1})`} radius={[3, 3, 0, 0]} />
+                    <Bar key={l.id} dataKey={l.id} name={td(l.name)} fill={`var(--chart-${i + 1})`} radius={[3, 3, 0, 0]} />
                   ))}
                 <Line
                   type="monotone"
                   dataKey="target"
-                  name="Target %"
+                  name={p("prod.seriesTarget")}
                   stroke="var(--status-critical)"
                   strokeDasharray="5 4"
                   strokeWidth={2}
@@ -225,7 +227,7 @@ function ProductionPage() {
           </div>
         </Panel>
 
-        <Panel title="Downtime pareto" subtitle="Accumulated minutes by root cause">
+        <Panel title={p("prod.paretoTitle")} subtitle={p("prod.paretoSub")}>
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={pareto} margin={{ top: 8, right: 8, left: -12, bottom: 40 }}>
@@ -250,16 +252,16 @@ function ProductionPage() {
                     fontSize: 12,
                   }}
                 />
-                <Bar yAxisId="left" dataKey="minutes" name="Downtime (min)" radius={[3, 3, 0, 0]}>
-                  {pareto.map((p, i) => (
-                    <Cell key={p.cause} fill={i < 2 ? "var(--status-critical)" : "var(--chart-1)"} />
+                <Bar yAxisId="left" dataKey="minutes" name={p("prod.colDowntimeMin")} radius={[3, 3, 0, 0]}>
+                  {pareto.map((row, i) => (
+                    <Cell key={row.cause} fill={i < 2 ? "var(--status-critical)" : "var(--chart-1)"} />
                   ))}
                 </Bar>
                 <Line
                   yAxisId="right"
                   type="monotone"
                   dataKey="cumulative"
-                  name="Cumulative %"
+                  name={p("prod.seriesCumulative")}
                   stroke="var(--chart-4)"
                   strokeWidth={2}
                   dot={{ r: 2 }}
@@ -270,20 +272,20 @@ function ProductionPage() {
         </Panel>
       </div>
 
-      <Panel className="mt-6" title="Produced batches" subtitle={`${batches.length} batch record(s)`}>
+      <Panel className="mt-6" title={p("prod.batchesTitle")} subtitle={p("prod.batchesSub", { n: batches.length })}>
         <div className="max-h-[520px] overflow-auto">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Batch</TableHead>
-                <TableHead>Line</TableHead>
-                <TableHead>Product</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead className="text-right">Produced</TableHead>
-                <TableHead className="text-right">Target</TableHead>
-                <TableHead className="text-right">Efficiency</TableHead>
-                <TableHead className="text-right">Downtime</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead>{p("common.batch")}</TableHead>
+                <TableHead>{p("common.line")}</TableHead>
+                <TableHead>{p("common.product")}</TableHead>
+                <TableHead>{p("common.date")}</TableHead>
+                <TableHead className="text-right">{p("prod.colProduced")}</TableHead>
+                <TableHead className="text-right">{p("common.target")}</TableHead>
+                <TableHead className="text-right">{p("prod.colEfficiency")}</TableHead>
+                <TableHead className="text-right">{p("prod.colDowntime")}</TableHead>
+                <TableHead>{p("common.status")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -291,9 +293,9 @@ function ProductionPage() {
                 <TableRow key={b.id}>
                   <TableCell className="font-medium">{b.id}</TableCell>
                   <TableCell className="text-muted-foreground">
-                    {productionLines.find((l) => l.id === b.lineId)?.name}
+                    {td(productionLines.find((l) => l.id === b.lineId)?.name ?? "")}
                   </TableCell>
-                  <TableCell className="text-muted-foreground">{batchProduct(b.id)}</TableCell>
+                  <TableCell className="text-muted-foreground">{td(batchProduct(b.id))}</TableCell>
                   <TableCell className="tabular text-muted-foreground">{b.date}</TableCell>
                   <TableCell className="tabular text-right">{b.producedQty.toLocaleString()}</TableCell>
                   <TableCell className="tabular text-right text-muted-foreground">
@@ -309,7 +311,7 @@ function ProductionPage() {
               {batches.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={9} className="py-10 text-center text-muted-foreground">
-                    No batches match the current filters.
+                    {p("prod.empty")}
                   </TableCell>
                 </TableRow>
               )}

@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useApp } from "@/lib/app-context";
+import { useI18n } from "@/lib/i18n";
 import type { Role } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/login")({
@@ -42,6 +43,7 @@ const ROLES: Role[] = [
 
 function LoginPage() {
   const { signIn } = useApp();
+  const { p, td } = useI18n();
   const navigate = useNavigate();
   const [email, setEmail] = useState("m.whitfield@demo.com");
   const [password, setPassword] = useState("demo1234");
@@ -59,24 +61,22 @@ function LoginPage() {
           </div>
           <div>
             <p className="font-display text-sm font-semibold tracking-widest">DEMO</p>
-            <p className="text-[11px] opacity-70">Operations Analytics Platform</p>
+            <p className="text-[11px] opacity-70">{p("login.brandSub")}</p>
           </div>
         </div>
         <div className="max-w-lg">
           <h1 className="font-display text-4xl font-semibold leading-tight">
-            One operating picture across the furnace, the lab and the yard.
+            {p("login.heroTitle")}
           </h1>
           <p className="mt-4 text-sm opacity-80">
-            Raw material coverage, line efficiency, positive release and demand
-            fulfillment — consolidated for daily operating reviews and executive
-            committee reporting.
+            {p("login.heroBody")}
           </p>
         </div>
         <dl className="grid grid-cols-3 gap-6 border-t border-white/15 pt-6 text-sm">
           {[
-            ["3", "Production lines"],
-            ["6 mo", "Rolling history"],
-            ["4", "Operational domains"],
+            ["3", p("login.statLines")],
+            [p("login.statHistoryValue"), p("login.statHistory")],
+            ["4", p("login.statDomains")],
           ].map(([v, l]) => (
             <div key={l}>
               <dt className="font-display text-2xl font-semibold">{v}</dt>
@@ -96,15 +96,15 @@ function LoginPage() {
           }}
         >
           <h2 className="font-display text-2xl font-semibold text-foreground">
-            Sign in
+            {p("login.signIn")}
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Demonstration environment — any credentials are accepted.
+            {p("login.signInSub")}
           </p>
 
           <div className="mt-8 space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Corporate email</Label>
+              <Label htmlFor="email">{p("login.email")}</Label>
               <Input
                 id="email"
                 type="email"
@@ -114,7 +114,7 @@ function LoginPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{p("login.password")}</Label>
               <Input
                 id="password"
                 type="password"
@@ -124,7 +124,7 @@ function LoginPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="role">Role</Label>
+              <Label htmlFor="role">{p("login.role")}</Label>
               <Select value={role} onValueChange={(v) => setRole(v as Role)}>
                 <SelectTrigger id="role">
                   <SelectValue />
@@ -132,19 +132,19 @@ function LoginPage() {
                 <SelectContent>
                   {ROLES.map((r) => (
                     <SelectItem key={r} value={r}>
-                      {r}
+                      {td(r)}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
               <p className="text-xs text-muted-foreground">
-                Administration modules are visible to the Administrator role only.
+                {p("login.roleNote")}
               </p>
             </div>
           </div>
 
           <Button type="submit" className="mt-8 w-full gap-2">
-            <Lock className="size-4" /> Access platform
+            <Lock className="size-4" /> {p("login.submit")}
           </Button>
         </form>
       </div>

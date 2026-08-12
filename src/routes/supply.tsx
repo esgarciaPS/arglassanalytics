@@ -29,6 +29,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { matchesSearch, useApp } from "@/lib/app-context";
+import { useI18n } from "@/lib/i18n";
 import {
   coverageDays,
   materialStatus,
@@ -59,6 +60,7 @@ const ALL = "all";
 
 function SupplyPage() {
   const { search } = useApp();
+  const { p, td } = useI18n();
   const [warehouse, setWarehouse] = useState(ALL);
   const [category, setCategory] = useState(ALL);
   const [supplier, setSupplier] = useState(ALL);
@@ -85,57 +87,57 @@ function SupplyPage() {
     <AppShell>
       <PageHeader
         legendModule="supply"
-        title="Supply & Raw Materials"
-        description="Batch house inventory position against minimum stock and coverage targets, by warehouse and supplier."
+        title={p("supply.title")}
+        description={p("supply.desc")}
         fileName="demo-supply"
         filterSummary={[
-          warehouse !== ALL ? `Warehouse: ${warehouse}` : null,
-          category !== ALL ? `Category: ${category}` : null,
-          supplier !== ALL ? `Supplier: ${supplier}` : null,
-          search ? `Search: "${search}"` : null,
+          warehouse !== ALL ? `${p("common.warehouse")}: ${td(warehouse)}` : null,
+          category !== ALL ? `${p("common.category")}: ${td(category)}` : null,
+          supplier !== ALL ? `${p("common.supplier")}: ${supplier}` : null,
+          search ? `${p("common.search")}: "${search}"` : null,
         ]
           .filter(Boolean)
-          .join(" · ") || "No filters applied"}
+          .join(" · ") || p("common.noFilters")}
         sections={() => [
           {
-            title: "Raw materials",
+            title: p("supply.secMaterials"),
             columns: [
               "ID",
-              "Material",
-              "Category",
-              "Current stock",
-              "Minimum stock",
-              "Unit",
-              "Coverage (days)",
-              "Coverage target (days)",
-              "Supplier",
-              "Warehouse",
-              "Status",
+              p("supply.colMaterial"),
+              p("common.category"),
+              p("supply.colCurrent"),
+              p("supply.colMinFull"),
+              p("supply.colUnit"),
+              p("supply.colCoverageDays"),
+              p("supply.colCoverageTarget"),
+              p("common.supplier"),
+              p("common.warehouse"),
+              p("common.status"),
             ],
             rows: filtered.map((m) => [
               m.id,
-              m.name,
-              m.category,
+              td(m.name),
+              td(m.category),
               m.currentStock,
               m.minStock,
               m.unit,
               coverageDays(m),
               m.coverageTarget,
               m.supplier,
-              m.warehouse,
-              materialStatus(m),
+              td(m.warehouse),
+              p(`status.${materialStatus(m)}`),
             ]),
           },
         ]}
       >
-        <FilterSelect value={warehouse} onChange={setWarehouse} options={warehouses} label="Warehouse" />
-        <FilterSelect value={category} onChange={setCategory} options={categories} label="Category" />
-        <FilterSelect value={supplier} onChange={setSupplier} options={suppliers} label="Supplier" />
+        <FilterSelect value={warehouse} onChange={setWarehouse} options={warehouses} label={p("common.warehouse")} allLabel={p("supply.allWarehouses")} />
+        <FilterSelect value={category} onChange={setCategory} options={categories} label={p("common.category")} allLabel={p("supply.allCategories")} />
+        <FilterSelect value={supplier} onChange={setSupplier} options={suppliers} label={p("common.supplier")} allLabel={p("supply.allSuppliers")} />
       </PageHeader>
 
       <Panel
-        title="Stock evolution by material"
-        subtitle="Last 6 months — top materials in the current selection"
+        title={p("supply.chartTitle")}
+        subtitle={p("supply.chartSub")}
         className="mb-6"
       >
         <div className="h-72">
@@ -158,7 +160,7 @@ function SupplyPage() {
                   key={m.id}
                   type="monotone"
                   dataKey={m.id}
-                  name={m.name}
+                  name={td(m.name)}
                   stroke={`var(--chart-${(i % 5) + 1})`}
                   strokeWidth={2}
                   dot={false}
@@ -169,30 +171,30 @@ function SupplyPage() {
         </div>
       </Panel>
 
-      <Panel title="Raw material inventory" subtitle={`${filtered.length} material(s)`}>
+      <Panel title={p("supply.tableTitle")} subtitle={p("supply.tableSub", { n: filtered.length })}>
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Material</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead className="text-right">Current stock</TableHead>
-                <TableHead className="text-right">Min. stock</TableHead>
-                <TableHead className="text-right">Coverage</TableHead>
-                <TableHead className="text-right">Target</TableHead>
-                <TableHead>Supplier</TableHead>
-                <TableHead>Warehouse</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead>{p("supply.colMaterial")}</TableHead>
+                <TableHead>{p("common.category")}</TableHead>
+                <TableHead className="text-right">{p("supply.colCurrent")}</TableHead>
+                <TableHead className="text-right">{p("supply.colMin")}</TableHead>
+                <TableHead className="text-right">{p("supply.colCoverage")}</TableHead>
+                <TableHead className="text-right">{p("common.target")}</TableHead>
+                <TableHead>{p("common.supplier")}</TableHead>
+                <TableHead>{p("common.warehouse")}</TableHead>
+                <TableHead>{p("common.status")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filtered.map((m) => (
                 <TableRow key={m.id}>
                   <TableCell className="font-medium">
-                    {m.name}
+                    {td(m.name)}
                     <span className="ml-2 text-xs text-muted-foreground">{m.id}</span>
                   </TableCell>
-                  <TableCell className="text-muted-foreground">{m.category}</TableCell>
+                  <TableCell className="text-muted-foreground">{td(m.category)}</TableCell>
                   <TableCell className="tabular text-right">
                     {m.currentStock.toLocaleString()} {m.unit}
                   </TableCell>
@@ -204,7 +206,7 @@ function SupplyPage() {
                     {m.coverageTarget} d
                   </TableCell>
                   <TableCell className="text-muted-foreground">{m.supplier}</TableCell>
-                  <TableCell className="text-muted-foreground">{m.warehouse}</TableCell>
+                  <TableCell className="text-muted-foreground">{td(m.warehouse)}</TableCell>
                   <TableCell>
                     <StatusBadge status={materialStatus(m)} />
                   </TableCell>
@@ -213,7 +215,7 @@ function SupplyPage() {
               {filtered.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={9} className="py-10 text-center text-muted-foreground">
-                    No materials match the current filters.
+                    {p("supply.empty")}
                   </TableCell>
                 </TableRow>
               )}
@@ -230,22 +232,25 @@ function FilterSelect({
   onChange,
   options,
   label,
+  allLabel,
 }: {
   value: string;
   onChange: (v: string) => void;
   options: string[];
   label: string;
+  allLabel: string;
 }) {
+  const { td } = useI18n();
   return (
     <Select value={value} onValueChange={onChange}>
       <SelectTrigger className="h-9 w-[190px]" aria-label={label}>
         <SelectValue placeholder={label} />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="all">All {label.toLowerCase()}s</SelectItem>
+        <SelectItem value="all">{allLabel}</SelectItem>
         {options.map((o) => (
           <SelectItem key={o} value={o}>
-            {o}
+            {td(o)}
           </SelectItem>
         ))}
       </SelectContent>

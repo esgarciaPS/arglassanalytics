@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/table";
 import { toast } from "sonner";
 import { matchesSearch, useApp } from "@/lib/app-context";
+import { useI18n } from "@/lib/i18n";
 import { users as seedUsers, type AppUser, type Role } from "@/lib/mock-data";
 import { RestrictedNotice } from "./admin.targets";
 
@@ -49,15 +50,16 @@ const ROLES: Role[] = [
   "Executive",
 ];
 
-const ROLE_SCOPE: Record<Role, string> = {
-  Administrator: "All modules + administration",
-  "Production Supervisor": "Supply, Production",
-  "Quality Analyst": "Quality, Production (read)",
-  Executive: "All dashboards — read only",
+const ROLE_SCOPE_KEY: Record<Role, string> = {
+  Administrator: "users.scopeAdministrator",
+  "Production Supervisor": "users.scopeSupervisor",
+  "Quality Analyst": "users.scopeQuality",
+  Executive: "users.scopeExecutive",
 };
 
 function UsersPage() {
   const { search, session } = useApp();
+  const { p, td } = useI18n();
   const [list, setList] = useState<AppUser[]>(seedUsers);
 
   const filtered = useMemo(
@@ -77,35 +79,42 @@ function UsersPage() {
     <AppShell>
       <PageHeader
         legendModule="users"
-        title="Users & Roles"
-        description="Directory of platform accounts and the role that determines which operational modules each user can access."
+        title={p("users.title")}
+        description={p("users.desc")}
         fileName="demo-users"
-        filterSummary={search ? `Search: "${search}"` : "No filters applied"}
+        filterSummary={search ? `${p("common.search")}: "${search}"` : p("common.noFilters")}
         sections={() => [
           {
-            title: "Users",
-            columns: ["ID", "Name", "Email", "Role", "Module scope", "Status"],
+            title: p("users.secUsers"),
+            columns: [
+              "ID",
+              p("users.colUser"),
+              p("users.colEmail"),
+              p("users.colRole"),
+              p("users.colScope"),
+              p("common.status"),
+            ],
             rows: filtered.map((u) => [
               u.id,
               u.name,
               u.email,
-              u.role,
-              ROLE_SCOPE[u.role],
-              u.status,
+              td(u.role),
+              p(ROLE_SCOPE_KEY[u.role]),
+              td(u.status),
             ]),
           },
         ]}
       />
 
-      <Panel title="Platform users" subtitle={`${filtered.length} account(s)`}>
+      <Panel title={p("users.tableTitle")} subtitle={p("users.tableSub", { n: filtered.length })}>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>User</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead className="w-64">Role</TableHead>
-              <TableHead>Module scope</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead>{p("users.colUser")}</TableHead>
+              <TableHead>{p("users.colEmail")}</TableHead>
+              <TableHead className="w-64">{p("users.colRole")}</TableHead>
+              <TableHead>{p("users.colScope")}</TableHead>
+              <TableHead>{p("common.status")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -120,7 +129,7 @@ function UsersPage() {
                       setList((prev) =>
                         prev.map((x) => (x.id === u.id ? { ...x, role: v as Role } : x)),
                       );
-                      toast.success(`${u.name} reassigned to ${v}`);
+                      toast.success(p("users.reassigned", { name: u.name, role: td(v) }));
                     }}
                   >
                     <SelectTrigger className="h-9" aria-label={`Role for ${u.name}`}>
@@ -129,17 +138,17 @@ function UsersPage() {
                     <SelectContent>
                       {ROLES.map((r) => (
                         <SelectItem key={r} value={r}>
-                          {r}
+                          {td(r)}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </TableCell>
-                <TableCell className="text-muted-foreground">{ROLE_SCOPE[u.role]}</TableCell>
+                <TableCell className="text-muted-foreground">{p(ROLE_SCOPE_KEY[u.role])}</TableCell>
                 <TableCell>
                   <StatusBadge
                     status={u.status === "Active" ? "ok" : "warning"}
-                    label={u.status}
+                    label={td(u.status)}
                   />
                 </TableCell>
               </TableRow>
@@ -147,7 +156,7 @@ function UsersPage() {
             {filtered.length === 0 && (
               <TableRow>
                 <TableCell colSpan={5} className="py-10 text-center text-muted-foreground">
-                  No users match the current search.
+                  {p("users.empty")}
                 </TableCell>
               </TableRow>
             )}

@@ -1,11 +1,6 @@
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 import type { Status } from "@/lib/mock-data";
-
-const LABELS: Record<Status, string> = {
-  ok: "On target",
-  warning: "Alert",
-  critical: "Critical",
-};
 
 export function StatusBadge({
   status,
@@ -16,6 +11,7 @@ export function StatusBadge({
   label?: string;
   className?: string;
 }) {
+  const { p } = useI18n();
   return (
     <span
       className={cn(
@@ -34,7 +30,7 @@ export function StatusBadge({
           status === "critical" && "bg-status-critical",
         )}
       />
-      {label ?? LABELS[status]}
+      {label ?? p(`status.${status}`)}
     </span>
   );
 }

@@ -16,6 +16,7 @@ import { KpiCard } from "@/components/dashboard/KpiCard";
 import { PageHeader, Panel } from "@/components/dashboard/PageHeader";
 import { StatusBadge } from "@/components/dashboard/StatusBadge";
 import { matchesSearch, useApp } from "@/lib/app-context";
+import { useI18n } from "@/lib/i18n";
 import { alerts, executiveKpis, monthlyTrend } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/")({
@@ -40,8 +41,9 @@ export const Route = createFileRoute("/")({
 
 function ExecutivePage() {
   const { search } = useApp();
+  const { p, td } = useI18n();
   const kpi = executiveKpis();
-  const trend = monthlyTrend();
+  const trend = monthlyTrend().map((t) => ({ ...t, month: td(t.month) }));
   const visibleAlerts = alerts.filter((a) =>
     matchesSearch(search, a.message, a.domain, a.severity),
   );
@@ -50,28 +52,33 @@ function ExecutivePage() {
     <AppShell>
       <PageHeader
         legendModule="executive"
-        title="Executive Panel"
-        description="Consolidated view of supply, production, quality and commercial performance for the last six months."
+        title={p("exec.title")}
+        description={p("exec.desc")}
         fileName="demo-executive-panel"
-        filterSummary={search ? `Search filter: "${search}"` : "No filters applied"}
+        filterSummary={search ? `${p("exec.searchFilter")}: "${search}"` : p("common.noFilters")}
         sections={() => [
           {
-            title: "Consolidated trend",
+            title: p("exec.secTrend"),
             columns: [
-              "Month",
-              "Production compliance (%)",
-              "Positive release (%)",
-              "Sales fulfillment (%)",
+              p("common.month"),
+              p("exec.colProduction"),
+              p("exec.colQuality"),
+              p("exec.colSales"),
             ],
             rows: trend.map((t) => [t.month, t.production, t.quality, t.sales]),
           },
           {
-            title: "Alerts",
-            columns: ["Severity", "Domain", "Message", "Timestamp"],
+            title: p("exec.secAlerts"),
+            columns: [
+              p("exec.colSeverity"),
+              p("exec.colDomain"),
+              p("exec.colMessage"),
+              p("exec.colTimestamp"),
+            ],
             rows: visibleAlerts.map((a) => [
-              a.severity,
-              a.domain,
-              a.message,
+              p(`status.${a.severity}`),
+              td(a.domain),
+              td(a.message),
               a.timestamp,
             ]),
           },
@@ -80,38 +87,38 @@ function ExecutivePage() {
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <KpiCard
-          label="Production compliance"
+          label={p("exec.kpiProduction")}
           value={kpi.production.value}
           unit="%"
           delta={kpi.production.delta}
-          caption="vs. previous month"
+          caption={p("exec.vsPrev")}
           icon={Gauge}
           status={kpi.production.value >= 95 ? "ok" : "warning"}
         />
         <KpiCard
-          label="Stock coverage"
+          label={p("exec.kpiCoverage")}
           value={kpi.coverage.value}
-          unit="days"
+          unit={p("common.days")}
           delta={kpi.coverage.delta}
-          caption="weighted average"
+          caption={p("exec.weighted")}
           icon={Boxes}
           status={kpi.coverage.value >= 15 ? "ok" : "warning"}
         />
         <KpiCard
-          label="Sales capacity covered"
+          label={p("exec.kpiSales")}
           value={kpi.sales.value}
           unit="%"
           delta={kpi.sales.delta}
-          caption="vs. previous month"
+          caption={p("exec.vsPrev")}
           icon={Truck}
           status={kpi.sales.value >= 95 ? "ok" : "warning"}
         />
         <KpiCard
-          label="Positive release"
+          label={p("exec.kpiQuality")}
           value={kpi.quality.value}
           unit="%"
           delta={kpi.quality.delta}
-          caption="approved inspections"
+          caption={p("exec.approvedInspections")}
           icon={ShieldCheck}
           status={kpi.quality.value >= 90 ? "ok" : "warning"}
         />
@@ -119,8 +126,8 @@ function ExecutivePage() {
 
       <div className="mt-6 grid gap-6 xl:grid-cols-[1.6fr_1fr]">
         <Panel
-          title="Consolidated performance trend"
-          subtitle="Production compliance, positive release and sales fulfillment — last 6 months"
+          title={p("exec.trendTitle")}
+          subtitle={p("exec.trendSub")}
         >
           <div className="h-[420px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -146,7 +153,7 @@ function ExecutivePage() {
                 <Area
                   type="monotone"
                   dataKey="production"
-                  name="Production compliance %"
+                  name={p("exec.seriesProduction")}
                   stroke="var(--chart-1)"
                   fill="url(#gProd)"
                   strokeWidth={2}
@@ -154,7 +161,7 @@ function ExecutivePage() {
                 <Line
                   type="monotone"
                   dataKey="quality"
-                  name="Positive release %"
+                  name={p("exec.seriesQuality")}
                   stroke="var(--chart-3)"
                   strokeWidth={2}
                   dot={false}
@@ -162,7 +169,7 @@ function ExecutivePage() {
                 <Line
                   type="monotone"
                   dataKey="sales"
-                  name="Sales fulfillment %"
+                  name={p("exec.seriesSales")}
                   stroke="var(--chart-4)"
                   strokeWidth={2}
                   dot={false}
@@ -173,8 +180,8 @@ function ExecutivePage() {
         </Panel>
 
         <Panel
-          title="Recent alerts & deviations"
-          subtitle={`${visibleAlerts.length} record(s) in the current view`}
+          title={p("exec.alertsTitle")}
+          subtitle={p("exec.alertsSub", { n: visibleAlerts.length })}
         >
           <ul className="space-y-3">
             {visibleAlerts.map((a) => (
@@ -187,23 +194,23 @@ function ExecutivePage() {
                     status={a.severity}
                     label={
                       a.severity === "ok"
-                        ? "Resolved"
+                        ? p("exec.badgeResolved")
                         : a.severity === "warning"
-                          ? "Alert"
-                          : "Critical"
+                          ? p("exec.badgeAlert")
+                          : p("exec.badgeCritical")
                     }
                   />
                   <span className="text-[11px] text-muted-foreground">{a.timestamp}</span>
                 </div>
-                <p className="mt-2 text-sm text-foreground">{a.message}</p>
+                <p className="mt-2 text-sm text-foreground">{td(a.message)}</p>
                 <p className="mt-1 text-[11px] uppercase tracking-widest text-muted-foreground">
-                  {a.domain}
+                  {td(a.domain)}
                 </p>
               </li>
             ))}
             {visibleAlerts.length === 0 && (
               <li className="py-8 text-center text-sm text-muted-foreground">
-                No alerts match the current search.
+                {p("exec.noAlerts")}
               </li>
             )}
           </ul>
