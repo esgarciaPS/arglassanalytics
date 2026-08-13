@@ -77,14 +77,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const isActive = (to: string, exact?: boolean) =>
     exact ? pathname === to : pathname.startsWith(to);
 
-  return (
-    <div className="flex min-h-screen bg-background">
-      <aside
-        className={cn(
-          "sticky top-0 flex h-screen shrink-0 flex-col bg-sidebar text-sidebar-foreground transition-[width] duration-200",
-          collapsed ? "w-16" : "w-68",
-        )}
-      >
+  const sidebar = (
+    <>
         <div className="flex h-16 items-center gap-3 border-b border-sidebar-border px-4">
           <div className="grid size-9 shrink-0 place-items-center rounded-md bg-sidebar-primary/20 text-sidebar-primary">
             <PanelsTopLeft className="size-5" />
@@ -101,7 +95,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           )}
         </div>
 
-        <nav className="flex-1 space-y-1 overflow-y-auto p-3">
+        <nav className="flex-1 space-y-1 overflow-y-auto p-3" onClick={() => setMobileOpen(false)}>
+
           {visibleNav.map((item) => (
             <Link
               key={item.to}
