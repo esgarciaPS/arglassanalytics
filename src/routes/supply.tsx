@@ -80,7 +80,7 @@ function SupplyPage() {
           (supplier === ALL || m.supplier === supplier) &&
           matchesSearch(search, m.name, m.category, m.supplier, m.warehouse, m.id),
       ),
-    [warehouse, category, supplier, search],
+    [warehouse, category, supplier, search, version],
   );
 
   const chartMaterials = filtered.slice(0, 5);
