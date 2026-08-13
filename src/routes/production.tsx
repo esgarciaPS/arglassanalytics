@@ -177,7 +177,7 @@ function ProductionPage() {
         ]}
       >
         <Select value={lineId} onValueChange={setLineId}>
-          <SelectTrigger className="h-9 w-[260px]" aria-label={p("prod.productionLine")}>
+          <SelectTrigger className="h-9 w-full sm:w-[260px]" aria-label={p("prod.productionLine")}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>

@@ -51,6 +51,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [collapsed, setCollapsed] = useState(false);
   const [adminOpen, setAdminOpen] = useState(true);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
 
   if (!ready) {
     return <div className="min-h-screen bg-background" />;
@@ -77,14 +79,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const isActive = (to: string, exact?: boolean) =>
     exact ? pathname === to : pathname.startsWith(to);
 
-  return (
-    <div className="flex min-h-screen bg-background">
-      <aside
-        className={cn(
-          "sticky top-0 flex h-screen shrink-0 flex-col bg-sidebar text-sidebar-foreground transition-[width] duration-200",
-          collapsed ? "w-16" : "w-68",
-        )}
-      >
+  const sidebar = (
+    <>
         <div className="flex h-16 items-center gap-3 border-b border-sidebar-border px-4">
           <div className="grid size-9 shrink-0 place-items-center rounded-md bg-sidebar-primary/20 text-sidebar-primary">
             <PanelsTopLeft className="size-5" />
@@ -101,7 +97,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           )}
         </div>
 
-        <nav className="flex-1 space-y-1 overflow-y-auto p-3">
+        <nav className="flex-1 space-y-1 overflow-y-auto p-3" onClick={() => setMobileOpen(false)}>
+
           {visibleNav.map((item) => (
             <Link
               key={item.to}
@@ -156,7 +153,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           )}
         </nav>
 
-        <div className="border-t border-sidebar-border p-3">
+        <div className="hidden border-t border-sidebar-border p-3 lg:block">
           <button
             onClick={() => setCollapsed((v) => !v)}
             className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm text-sidebar-foreground/70 hover:bg-sidebar-accent/60"
@@ -165,14 +162,48 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             {!collapsed && <span>{t("ui.collapse")}</span>}
           </button>
         </div>
+    </>
+  );
+
+  return (
+    <div className="flex min-h-screen bg-background">
+      <aside
+        className={cn(
+          "sticky top-0 hidden h-screen shrink-0 flex-col bg-sidebar text-sidebar-foreground transition-[width] duration-200 lg:flex",
+          collapsed ? "w-16" : "w-68",
+        )}
+      >
+        {sidebar}
       </aside>
 
+      {mobileOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setMobileOpen(false)}
+          />
+          <aside className="absolute left-0 top-0 flex h-full w-68 max-w-[85vw] flex-col bg-sidebar text-sidebar-foreground shadow-xl">
+            {sidebar}
+          </aside>
+        </div>
+      )}
+
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-border bg-card px-6">
-          <div className="hidden text-sm font-semibold text-foreground md:block">
+        <header className="sticky top-0 z-30 flex h-16 items-center gap-2 border-b border-border bg-card px-3 sm:gap-4 sm:px-6">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="shrink-0 lg:hidden"
+            aria-label="Open menu"
+            onClick={() => setMobileOpen(true)}
+          >
+            <Menu className="size-5" />
+          </Button>
+          <div className="hidden text-sm font-semibold text-foreground xl:block">
             {t("ui.platform")}
           </div>
-          <div className="relative mx-auto w-full max-w-xl">
+          <div className="relative mx-auto w-full min-w-0 max-w-xl">
+
             <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               value={search}
@@ -211,11 +242,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-10 gap-3 px-2">
-                <span className="grid size-8 place-items-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
+              <Button variant="ghost" className="h-10 shrink-0 gap-3 px-2">
+                <span className="grid size-8 shrink-0 place-items-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
                   {session.name.slice(0, 2).toUpperCase()}
                 </span>
-                <span className="hidden text-left leading-tight sm:block">
+                <span className="hidden text-left leading-tight lg:block">
+
                   <span className="block text-sm font-medium">{session.name}</span>
                   <span className="block text-[11px] text-muted-foreground">
                     {td(session.role)}
@@ -240,7 +272,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </DropdownMenu>
         </header>
 
-        <main className="flex-1 px-6 py-6">{children}</main>
+        <main className="min-w-0 flex-1 px-4 py-6 sm:px-6">{children}</main>
       </div>
     </div>
   );

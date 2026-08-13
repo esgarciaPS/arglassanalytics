@@ -109,7 +109,7 @@ function TargetsPage() {
       </PageHeader>
 
       <Tabs defaultValue="materials">
-        <TabsList>
+        <TabsList className="h-auto max-w-full flex-wrap justify-start">
           <TabsTrigger value="materials">{p("targets.tabMaterials")}</TabsTrigger>
           <TabsTrigger value="lines">{p("targets.tabLines")}</TabsTrigger>
           <TabsTrigger value="channels">{p("targets.tabChannels")}</TabsTrigger>

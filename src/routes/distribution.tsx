@@ -123,7 +123,7 @@ function DistributionPage() {
         ]}
       >
         <Select value={period} onValueChange={setPeriod}>
-          <SelectTrigger className="h-9 w-[160px]" aria-label={p("common.period")}>
+          <SelectTrigger className="h-9 w-full sm:w-[160px]" aria-label={p("common.period")}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>

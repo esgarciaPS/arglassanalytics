@@ -189,7 +189,7 @@ function QualityPage() {
           subtitle={p("qual.scatterSub")}
           action={
             <Select value={variable} onValueChange={setVariable}>
-              <SelectTrigger className="h-9 w-[260px]" aria-label={p("qual.colProcessVariable")}>
+              <SelectTrigger className="h-9 w-full sm:w-[260px]" aria-label={p("qual.colProcessVariable")}>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
