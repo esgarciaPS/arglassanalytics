@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/table";
 import { matchesSearch, useApp } from "@/lib/app-context";
 import { useI18n } from "@/lib/i18n";
+import { useTargets } from "@/lib/targets-store";
 import { MONTHS, MONTH_LABELS, salesTargets, type Status } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/distribution")({
@@ -62,6 +63,7 @@ function channelStatus(ratio: number): Status {
 function DistributionPage() {
   const { search } = useApp();
   const { p, td } = useI18n();
+  const { version } = useTargets();
   const [period, setPeriod] = useState(MONTHS[MONTHS.length - 1]!);
 
   const rows = useMemo(
@@ -70,7 +72,7 @@ function DistributionPage() {
         (s) =>
           s.period === period && matchesSearch(search, s.channel, s.region, s.period, s.id),
       ),
-    [period, search],
+    [period, search, version],
   );
 
   const totalTarget = rows.reduce((a, s) => a + s.target, 0);
