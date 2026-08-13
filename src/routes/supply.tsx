@@ -243,7 +243,7 @@ function FilterSelect({
   const { td } = useI18n();
   return (
     <Select value={value} onValueChange={onChange}>
-      <SelectTrigger className="h-9 w-[190px]" aria-label={label}>
+      <SelectTrigger className="h-9 w-full sm:w-[190px]" aria-label={label}>
         <SelectValue placeholder={label} />
       </SelectTrigger>
       <SelectContent>
