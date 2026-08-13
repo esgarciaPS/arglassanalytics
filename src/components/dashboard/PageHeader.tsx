@@ -30,14 +30,15 @@ export function PageHeader({
 }) {
   const { p } = useI18n();
   return (
-    <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-      <div>
-        <h1 className="font-display text-2xl font-semibold text-foreground">{title}</h1>
+    <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:flex-wrap lg:items-end lg:justify-between">
+      <div className="min-w-0">
+        <h1 className="font-display text-xl font-semibold text-foreground sm:text-2xl">{title}</h1>
         <p className="mt-1 max-w-2xl text-sm text-muted-foreground">{description}</p>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto [&>*]:min-w-0">
         {children}
         {legendModule && <LegendPopover module={legendModule} />}
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="default" className="gap-2">
