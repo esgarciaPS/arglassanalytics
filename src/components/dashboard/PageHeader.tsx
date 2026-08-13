@@ -88,9 +88,10 @@ export function Panel({
   action?: React.ReactNode;
 }) {
   return (
-    <section className={`card-surface p-5 ${className ?? ""}`}>
+    <section className={`card-surface min-w-0 p-4 sm:p-5 ${className ?? ""}`}>
       <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
-        <div>
+        <div className="min-w-0">
+
           <h2 className="text-sm font-semibold text-foreground">{title}</h2>
           {subtitle && (
             <p className="mt-0.5 text-xs text-muted-foreground">{subtitle}</p>
