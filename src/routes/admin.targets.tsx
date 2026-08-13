@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/layout/AppShell";
 import { PageHeader, Panel } from "@/components/dashboard/PageHeader";
@@ -16,7 +16,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { matchesSearch, useApp } from "@/lib/app-context";
 import { useI18n } from "@/lib/i18n";
-import { rawMaterials, productionLines, salesTargets, MONTHS } from "@/lib/mock-data";
+import { useTargets } from "@/lib/targets-store";
+import { rawMaterials, productionLines } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/admin/targets")({
   head: () => ({
@@ -37,21 +38,24 @@ export const Route = createFileRoute("/admin/targets")({
   component: TargetsPage,
 });
 
-const LINE_DEFAULTS: Record<string, number> = { L1: 92, L2: 92, L3: 90 };
-
 function TargetsPage() {
   const { search, session } = useApp();
+  const { targets, saveTargets } = useTargets();
   const { p, td } = useI18n();
   const [materialTargets, setMaterialTargets] = useState<Record<string, number>>(
-    Object.fromEntries(rawMaterials.map((m) => [m.id, m.coverageTarget])),
+    targets.materials,
   );
-  const [lineTargets, setLineTargets] = useState<Record<string, number>>(LINE_DEFAULTS);
-  const [channelTargets, setChannelTargets] = useState<Record<string, number>>(() => {
-    const last = MONTHS[MONTHS.length - 1]!;
-    return Object.fromEntries(
-      salesTargets.filter((s) => s.period === last).map((s) => [s.channel, s.target]),
-    );
-  });
+  const [lineTargets, setLineTargets] = useState<Record<string, number>>(targets.lines);
+  const [channelTargets, setChannelTargets] = useState<Record<string, number>>(
+    targets.channels,
+  );
+
+  useEffect(() => {
+    setMaterialTargets(targets.materials);
+    setLineTargets(targets.lines);
+    setChannelTargets(targets.channels);
+  }, [targets]);
+
 
   const materials = useMemo(
     () => rawMaterials.filter((m) => matchesSearch(search, m.name, m.category, m.id)),
@@ -102,10 +106,18 @@ function TargetsPage() {
       >
         <Button
           variant="secondary"
-          onClick={() => toast.success(p("targets.saved"))}
+          onClick={() => {
+            saveTargets({
+              materials: materialTargets,
+              lines: lineTargets,
+              channels: channelTargets,
+            });
+            toast.success(p("targets.saved"));
+          }}
         >
           {p("targets.save")}
         </Button>
+
       </PageHeader>
 
       <Tabs defaultValue="materials">

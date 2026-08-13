@@ -17,6 +17,7 @@ import { PageHeader, Panel } from "@/components/dashboard/PageHeader";
 import { StatusBadge } from "@/components/dashboard/StatusBadge";
 import { matchesSearch, useApp } from "@/lib/app-context";
 import { useI18n } from "@/lib/i18n";
+import { useTargets } from "@/lib/targets-store";
 import { alerts, executiveKpis, monthlyTrend } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/")({
@@ -42,6 +43,7 @@ export const Route = createFileRoute("/")({
 function ExecutivePage() {
   const { search } = useApp();
   const { p, td } = useI18n();
+  useTargets();
   const kpi = executiveKpis();
   const trend = monthlyTrend().map((t) => ({ ...t, month: td(t.month) }));
   const visibleAlerts = alerts.filter((a) =>

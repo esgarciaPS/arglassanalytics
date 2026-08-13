@@ -516,3 +516,10 @@ export function executiveKpis() {
     quality: { value: last.quality, delta: last.quality - prev.quality },
   };
 }
+
+/** Efficiency targets (%) per production line. Mutable so Admin > Targets can update them. */
+export const lineEfficiencyTargets: Record<string, number> = {
+  L1: 92,
+  L2: 92,
+  L3: 90,
+};

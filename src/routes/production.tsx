@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/table";
 import { matchesSearch, useApp } from "@/lib/app-context";
 import { useI18n } from "@/lib/i18n";
+import { useTargets } from "@/lib/targets-store";
 import {
   MONTHS,
   MONTH_LABELS,
@@ -40,6 +41,7 @@ import {
   productionBatches,
   productionLines,
   type Status,
+  lineEfficiencyTargets,
 } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/production")({
@@ -61,8 +63,6 @@ export const Route = createFileRoute("/production")({
   component: ProductionPage,
 });
 
-const TARGET_EFFICIENCY = 92;
-
 function batchStatus(b: { producedQty: number; targetQty: number }): Status {
   const r = b.producedQty / b.targetQty;
   if (r >= 0.95) return "ok";
@@ -73,6 +73,7 @@ function batchStatus(b: { producedQty: number; targetQty: number }): Status {
 function ProductionPage() {
   const { search } = useApp();
   const { p, td } = useI18n();
+  const { version } = useTargets();
   const [lineId, setLineId] = useState("all");
 
   const batches = useMemo(
@@ -89,11 +90,19 @@ function ProductionPage() {
             productionLines.find((l) => l.id === b.lineId)?.plant ?? "",
           ),
       ),
-    [lineId, search],
+    [lineId, search, version],
   );
 
+  const activeLines = productionLines.filter((l) => lineId === "all" || l.id === lineId);
+  const targetEfficiency =
+    Math.round(
+      (activeLines.reduce((a, l) => a + (lineEfficiencyTargets[l.id] ?? 90), 0) /
+        (activeLines.length || 1)) *
+        10,
+    ) / 10;
+
   const efficiencyByMonth = MONTHS.map((m, i) => {
-    const row: Record<string, string | number> = { month: MONTH_LABELS[i]!, target: TARGET_EFFICIENCY };
+    const row: Record<string, string | number> = { month: MONTH_LABELS[i]!, target: targetEfficiency };
     productionLines.forEach((l) => {
       const set = batches.filter((b) => b.lineId === l.id && b.date.startsWith(m));
       row[l.id] = set.length
@@ -141,7 +150,7 @@ function ProductionPage() {
             rows: efficiencyByMonth.map((r) => [
               r["month"] as string,
               ...productionLines.map((l) => r[l.id] as number),
-              TARGET_EFFICIENCY,
+              targetEfficiency,
             ]),
           },
           {

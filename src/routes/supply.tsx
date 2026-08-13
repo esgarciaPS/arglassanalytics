@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/table";
 import { matchesSearch, useApp } from "@/lib/app-context";
 import { useI18n } from "@/lib/i18n";
+import { useTargets } from "@/lib/targets-store";
 import {
   coverageDays,
   materialStatus,
@@ -61,6 +62,7 @@ const ALL = "all";
 function SupplyPage() {
   const { search } = useApp();
   const { p, td } = useI18n();
+  const { version } = useTargets();
   const [warehouse, setWarehouse] = useState(ALL);
   const [category, setCategory] = useState(ALL);
   const [supplier, setSupplier] = useState(ALL);
@@ -78,7 +80,7 @@ function SupplyPage() {
           (supplier === ALL || m.supplier === supplier) &&
           matchesSearch(search, m.name, m.category, m.supplier, m.warehouse, m.id),
       ),
-    [warehouse, category, supplier, search],
+    [warehouse, category, supplier, search, version],
   );
 
   const chartMaterials = filtered.slice(0, 5);
