@@ -151,7 +151,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           )}
         </nav>
 
-        <div className="border-t border-sidebar-border p-3">
+        <div className="hidden border-t border-sidebar-border p-3 lg:block">
           <button
             onClick={() => setCollapsed((v) => !v)}
             className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm text-sidebar-foreground/70 hover:bg-sidebar-accent/60"
@@ -160,14 +160,48 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             {!collapsed && <span>{t("ui.collapse")}</span>}
           </button>
         </div>
+    </>
+  );
+
+  return (
+    <div className="flex min-h-screen bg-background">
+      <aside
+        className={cn(
+          "sticky top-0 hidden h-screen shrink-0 flex-col bg-sidebar text-sidebar-foreground transition-[width] duration-200 lg:flex",
+          collapsed ? "w-16" : "w-68",
+        )}
+      >
+        {sidebar}
       </aside>
 
+      {mobileOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setMobileOpen(false)}
+          />
+          <aside className="absolute left-0 top-0 flex h-full w-68 max-w-[85vw] flex-col bg-sidebar text-sidebar-foreground shadow-xl">
+            {sidebar}
+          </aside>
+        </div>
+      )}
+
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-border bg-card px-6">
-          <div className="hidden text-sm font-semibold text-foreground md:block">
+        <header className="sticky top-0 z-30 flex h-16 items-center gap-2 border-b border-border bg-card px-3 sm:gap-4 sm:px-6">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="shrink-0 lg:hidden"
+            aria-label="Open menu"
+            onClick={() => setMobileOpen(true)}
+          >
+            <Menu className="size-5" />
+          </Button>
+          <div className="hidden text-sm font-semibold text-foreground xl:block">
             {t("ui.platform")}
           </div>
-          <div className="relative mx-auto w-full max-w-xl">
+          <div className="relative mx-auto w-full min-w-0 max-w-xl">
+
             <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               value={search}
