@@ -41,6 +41,7 @@ import {
   productionBatches,
   productionLines,
   type Status,
+  lineEfficiencyTargets,
 } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/production")({
