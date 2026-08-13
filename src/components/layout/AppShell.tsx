@@ -242,11 +242,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-10 gap-3 px-2">
-                <span className="grid size-8 place-items-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
+              <Button variant="ghost" className="h-10 shrink-0 gap-3 px-2">
+                <span className="grid size-8 shrink-0 place-items-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
                   {session.name.slice(0, 2).toUpperCase()}
                 </span>
-                <span className="hidden text-left leading-tight sm:block">
+                <span className="hidden text-left leading-tight lg:block">
+
                   <span className="block text-sm font-medium">{session.name}</span>
                   <span className="block text-[11px] text-muted-foreground">
                     {td(session.role)}
