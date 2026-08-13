@@ -106,10 +106,18 @@ function TargetsPage() {
       >
         <Button
           variant="secondary"
-          onClick={() => toast.success(p("targets.saved"))}
+          onClick={() => {
+            saveTargets({
+              materials: materialTargets,
+              lines: lineTargets,
+              channels: channelTargets,
+            });
+            toast.success(p("targets.saved"));
+          }}
         >
           {p("targets.save")}
         </Button>
+
       </PageHeader>
 
       <Tabs defaultValue="materials">
