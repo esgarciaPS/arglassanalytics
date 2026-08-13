@@ -51,6 +51,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [collapsed, setCollapsed] = useState(false);
   const [adminOpen, setAdminOpen] = useState(true);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
 
   if (!ready) {
     return <div className="min-h-screen bg-background" />;
