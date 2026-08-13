@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/layout/AppShell";
 import { PageHeader, Panel } from "@/components/dashboard/PageHeader";
@@ -16,7 +16,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { matchesSearch, useApp } from "@/lib/app-context";
 import { useI18n } from "@/lib/i18n";
-import { rawMaterials, productionLines, salesTargets, MONTHS } from "@/lib/mock-data";
+import { useTargets } from "@/lib/targets-store";
+import { rawMaterials, productionLines } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/admin/targets")({
   head: () => ({
