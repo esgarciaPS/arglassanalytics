@@ -98,6 +98,15 @@ function ExecutivePage() {
           status={kpi.production.value >= 95 ? "ok" : "warning"}
         />
         <KpiCard
+          label={p("exec.kpiQuality")}
+          value={kpi.quality.value}
+          unit="%"
+          delta={kpi.quality.delta}
+          caption={p("exec.approvedInspections")}
+          icon={ShieldCheck}
+          status={kpi.quality.value >= 90 ? "ok" : "warning"}
+        />
+        <KpiCard
           label={p("exec.kpiCoverage")}
           value={kpi.coverage.value}
           unit={p("common.days")}
@@ -114,15 +123,6 @@ function ExecutivePage() {
           caption={p("exec.vsPrev")}
           icon={Truck}
           status={kpi.sales.value >= 95 ? "ok" : "warning"}
-        />
-        <KpiCard
-          label={p("exec.kpiQuality")}
-          value={kpi.quality.value}
-          unit="%"
-          delta={kpi.quality.delta}
-          caption={p("exec.approvedInspections")}
-          icon={ShieldCheck}
-          status={kpi.quality.value >= 90 ? "ok" : "warning"}
         />
       </div>
 
